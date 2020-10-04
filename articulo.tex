@@ -1,0 +1,498 @@
+\documentclass[12pt]{article}
+%\usepackage[english]{babel}
+\RequirePackage[spanish]{babel}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  % PDF hyperlinks, with coloured links
+%\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{courier}
+\usepackage{epstopdf}
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{colortbl}
+\usepackage{lscape}
+\usepackage{listings}
+\lstset{
+  literate = {-}{-}1,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true
+}
+
+\parskip 3ex % espacio entre parrafos.
+
+
+\begin{document}
+%%%%%%%%%%%%%%% PORTADA %%%%%%%%%%%%%%%%%%
+\pagestyle{empty}
+\begin{figure}
+   \centering
+   \includegraphics[scale=.5]{imgs/logo.png}
+\end{figure}
+
+\begin{center}
+Facultad de Ingeniería
+
+Escuela de Ingeniería en Bioinformática
+
+\bigskip\bigskip\bigskip\bigskip
+
+\rule{14cm}{0.5mm}
+
+\begin{Huge}\textbf{Informe Proyecto}\end{Huge}
+
+\begin{Huge}\textbf{Administración de Sistemas}\end{Huge}
+
+\rule{14cm}{0.5mm}
+
+\bigskip\bigskip\bigskip\bigskip
+\bigskip\bigskip\bigskip\bigskip
+\bigskip\bigskip\bigskip\bigskip
+\bigskip\bigskip\bigskip\bigskip
+
+
+\begin{tabular*}{14cm}{l@{\extracolsep{\fill}}r}
+\emph{Alumno:} & \emph{Profesor:}\\
+Nicolás Rojas Poblete & Alejandro Valdés\\
+\emph{Matrícula:} & \emph{Módulo:}\\
+2016430002 & Administración de Sistemas\\
+\emph{E-mail:} & \emph{Minor:}\\
+nicrojas16@alumnos.utalca.cl & Desarrollo de Software y\\
+& Administración de Sistemas\\
+\end{tabular*}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\pagestyle{plain}
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\listoffigures 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage%
+%\listoftables%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Introducción}
+
+
+\newpage
+\section{Compilando programas, librerías, kernel}
+
+\subsection{Compilando el compilador GCC}
+
+El compilador es muy importante dentro de los sistemas informáticos, se encargan de traducir el código fuente de los programas a un lenguaje que pueda ejecutar la máquina. En sistemas Linux por lo general viene incluído el compilador GCC en una versión defecto. Para ver la versión por defecto se puede ejecutar el siguiente comando.
+
+\begin{lstlisting}[frame=single,framexrightmargin=15pt]
+$ gcc --version
+gcc (Debian 8.3.0-6) 8.3.0
+Copyright (C) 2018 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+\end{lstlisting}
+
+En caso de que no se encuentre instalado, se puede instalar desde los repositorios de su distribución por apt u otro gestor de paquetes.
+
+\begin{lstlisting}[frame=single,framexrightmargin=15pt]
+$ sudo apt install gcc
+\end{lstlisting}
+
+\subsubsection{Prerequisitos GCC 9.3}
+
+En este caso se procederá a instalar la versión 9.3 de GCC a partir de la versión 8.3 que viene en nuestro sistema instalada.
+
+Según el sitio web de manualinux.eu\cite{mlinux} los requisitos para compilar gcc 9.3 son los siguientes:
+
+\begin{lstlisting}[frame=single,framexrightmargin=15pt]
+Gawk - (5.0.1)
+M4 - (1.4.18)
+Libtool - (2.4.6)
+Make - (4.3)
+Bison - (3.5.3)
+Flex - (2.6.4)
+Automake - (1.16.1)
+Autoconf - (2.69)
+Gettext - (0.20.1)
+Gperf - (3.1)
+Texinfo - (6.7)
+\end{lstlisting}
+\bigskip
+\bigskip
+\begin{lstlisting}[frame=single,framexrightmargin=15pt]
+Librerias en Desarrollo
+
+Gmp - (6.2.0)
+Mpfr - (4.0.2)
+Mpc - (1.1.0)
+ISL - (0.18)
+\end{lstlisting}
+
+\subsubsection{Descarga y Configuración GCC 9.3}
+
+Una vez revisadas las dependencias se procede a descargar el código fuente de GCC 9.3, esto en el ftp oficial.
+
+\begin{lstlisting}[frame=single,framexrightmargin=15pt]
+$ wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-9.3.0/gcc-9.3.0.tar.gz
+\end{lstlisting}
+
+Para descomprimir
+\begin{lstlisting}[frame=single,framexrightmargin=15pt]
+$ tar -xzvf gcc-9.3.0.tar.gz
+\end{lstlisting}
+
+Luego es necesario entrar en la carpeta y dentro de los archivos viene incluido un script que descarga las principales dependencias(Gmp,Mpfr,Mpc,ISL).
+
+\begin{lstlisting}[frame=single]
+$ cd gcc-9.3.0/
+$ contrib/download_prerequisites
+\end{lstlisting}
+
+Luego se puede crear una carpeta aparte en dónde se configure y construya el nuevo compilador.
+
+\begin{lstlisting}[frame=single]
+$ cd ~
+$ mkdir build-gcc9.3
+$ cd build-gcc9.3/
+\end{lstlisting}
+
+Ahora se procede a ejecutar el ./configure con los siguiente parámetros.
+\begin{lstlisting}[frame=single]
+$ ../gcc-9.3.0/configure --build=x86_64-linux-gnu --host=x86_64-linux-gnu \
+--target=x86_64-linux-gnu --enable-shared --enable-threads=posix \
+--enable-__cxa_atexit --enable-clocale=gnu --enable-languages=c,c++,fortran \
+--prefix=/usr/local/gcc-9.3 --disable-multilib --program-suffix=-9.3
+\end{lstlisting}
+
+
+\subsubsection{Instalación GCC 9.3}
+
+Una vez terminada la configuración y creado el archivo make file se procede a compilar
+
+\begin{lstlisting}[frame=single]
+$ make -j 16
+\end{lstlisting}
+En este caso -j 16 indica la cantidad de CPUs disponibles en el sistema para la compilación. Dependiendo de la potencia puede tardar unos pocos minutos hasta un par de horas.
+
+En este caso un CPU con 8 núcleos/16 hilos a 5.0 GHz la compilación solo tardó 15 minutos aproximadamente. 
+
+\begin{lstlisting}[frame=single]
+real    15m41.040s
+user    140m26.060s
+sys     3m52.618s
+\end{lstlisting}
+
+Luego como superusuario se copian los binarios al prefix indicado anteriormente en la configuración
+\begin{lstlisting}[frame=single]
+$ sudo make install-strip
+\end{lstlisting}
+
+Por último es necesario exportar el directorio a la variable de entorno PATH
+\begin{lstlisting}[frame=single]
+$ export PATH=$PATH:/usr/local/gcc-9.3/bin/
+$ export export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/gcc-9.3/lib64/
+\end{lstlisting}
+
+Ahora se puede comprobar la version instalada
+\begin{lstlisting}[frame=single]
+$ gcc-9.3 --version
+gcc-9.3 (GCC) 9.3.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+\end{lstlisting}
+%\newpage
+%\section{Neo4j}
+%Neo4J es una base de datos de grafos con la capacidad de relacionar los datos sin perder la velocidad de consulta que tienen otros gestores NoSQL. Además permite visualizar las consultas a través de los grafos y las relaciones entre nodos.\cite{neo4j}
+%\subsection{Instalación en Debian}
+%\label{subsec:install}
+%Neo4j tiene como dependencia Java 11, en caso de contar con otra versión de Java estas pueden coexistir en el mismo sistema, solo se deberá seleccionar cual se usará por defecto con el siguiente comando.\\
+%
+%\begin{lstlisting}[frame=single,framexrightmargin=60pt]
+%sudo update-alternatives --config java
+%
+%Selection  Path                                      Priority Status
+%-----------------------------------------------------
+%* 0       /usr/lib/jvm/oracle_jdk8/jre/bin/java        2000   auto mode
+%  1       /usr/lib/jvm/java-11-openjdk-amd64/bin/java  1111   manual mode
+%  2       /usr/lib/jvm/oracle_jdk8/jre/bin/java        2000   manual mode
+%
+%Press <enter> to keep the current choice[*], or type selection number:
+%\end{lstlisting}
+%
+%Al igual que con MongoDB se debe agregar la llave y el repositorio a nuestro source.list .\\
+%
+%\begin{lstlisting}[frame=single]
+%wget -O - https://debian.neo4j.com/neotechnology.gpg.key | 
+%sudo apt-key add -
+%
+%echo 'deb https://debian.neo4j.com stable latest' | 
+%sudo tee -a /etc/apt/sources.list.d/neo4j.list
+%
+%\end{lstlisting}
+%
+%Luego se debe actualizar los repositorios y una vez terminado se pueden listar los paquetes que contienen la palabra neo4j para verificar la versión que se encuentra disponible en el repositorio.\\  
+%\begin{lstlisting}[frame=single]
+%sudo apt-get update
+%apt list -a neo4j
+%\end{lstlisting}
+%
+%En este caso la última versión disponible es la 4.1.1 
+%\begin{lstlisting}[frame=single]
+%sudo apt install neo4j=1:4.1.1
+%\end{lstlisting}
+%
+%Una vez instalado se debe correr el servicio
+%\begin{lstlisting}[frame=single]
+%sudo systemctl start neo4j
+%\end{lstlisting}
+%
+%Al levantar el servidor se deberá acceder a \url{http://localhost:7474/} para configurar el usuario y contraseña. Luego de este paso se podrá manejar la base de datos desde el mismo navegador pero también esta disponible el manejo mediante cypher-shell incluido en la instalación de Neo4j.
+%\begin{lstlisting}[frame=single,framexrightmargin=40pt]
+%$cypher-shell
+%username: neo4j
+%password: ************
+%Connected to Neo4j 4.1.0 at neo4j://localhost:7687 as user neo4j.
+%Type :help for a list of available commands or :exit to exit the shell.
+%Note that Cypher queries must end with a semicolon.
+%neo4j@neo4j>
+%\end{lstlisting}
+%\subsection{Carga de Datos}
+%
+%Para importar o exportar datos en Neo4j es necesario instalar el plugin Apoc disponilbe en el repositorio GitHub.\footnote{GitHub Apoc \url{https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/}} En este caso se instalará la versión 4.1.0.2 de Apoc que se corresponde con la versión de Neo4j instalada.
+%
+%Lo primero es descargar el plugin en la carpeta correspondiente.
+%\begin{lstlisting}[frame=single]
+%cd /var/lib/neo4j/plugins
+%sudo wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/
+%releases/download/4.1.0.2/apoc-4.1.0.2-all.jar
+%\end{lstlisting}
+%Luego es necesario activar en la configuración de neo4j el plugin descargado. Si el archivo apoc.conf no existe se crea y se añade la línea que se muestra a continuación.
+%\begin{lstlisting}[frame=single]
+%cd /etc/neo4j
+%sudo vim apoc.conf
+%
+%apoc.export.file.enabled=true
+%apoc.import.file.enabled=true
+%\end{lstlisting}
+%
+%En la configuración general, en el archivo neo4j.conf, se reemplaza la línea comentada por la siguiente.
+%\begin{lstlisting}[frame=single,framexrightmargin=45pt]
+%sudo vim neo4j.conf
+%#dbms.security.procedures.whitelist=apoc.coll.*,apoc.load.*
+%dbms.security.procedures.whitelist=apoc.coll.*,apoc.load.*,apoc.export.*,
+%apoc.create.*
+%\end{lstlisting}
+%
+%Por último se reinicia el servicio
+%\begin{lstlisting}[frame=single]
+%sudo systemctl start neo4j
+%\end{lstlisting}
+%
+%Antes de iniciar la importación se puede copiar el archivo CSV al directorio por defecto que tiene Neo4j (/var/lib/neo4j/import/ ). Además es necesario modificar el encabezado ya que contiene espacios y al usar la función de apoc para crear nodos, no permite el uso de espacios en los identificadores.
+% 
+%Para la importación dentro de la consola de cypher-shell
+%\begin{lstlisting}[frame=single,framexrightmargin=65pt]
+%> CALL apoc.load.csv('spotify_all.csv', {header:true}) YIELD map
+%WITH map
+%MERGE (sname:Song{Title:map.Title,Artist:map.Artist,Top_Genre:map.Top_Genre,
+%Year: map.Year,BPM: map.BPM,Energy: map.Energy,
+%Danceability:map.Danceability,Loudness:map.Loudness,Liveness:map.Liveness,
+%Valence:map.Valence,Length:map.Length,Acousticness:map.Acousticness,
+%Speechiness:map.Speechiness,Popularity:map.Popularity})
+%RETURN count(*);
+%+----------+
+%| count(*) |
+%+----------+
+%| 1994     |
+%+----------+
+%
+%1 row available after 59 ms, consumed after another 1370 ms
+%Added 1994 nodes, Set 27916 properties, Added 1994 labels
+%\end{lstlisting}
+%\subsection{Consultas}
+%En este caso para obtener las consulas de manera más visual se usará el browser de neo4j accesible desde \url{localhost:7474}
+%
+%La primera consulta consiste en seleccionar las canciones de la banda Coldplay que tengan una popularidad mayor a 80.
+%
+%\begin{lstlisting}[frame=single]
+%MATCH (n:Song {Artist:'Coldplay'}) 
+%WHERE n.Popularity>='80'
+%RETURN n;
+%\end{lstlisting}
+%\begin{figure}[!h]
+%   \centering
+%   \includegraphics[scale=.45]{imgs/neo4j1.png}
+%\end{figure}
+%
+%Para la segunda consulta se selecciona las canciones entre los años 1970 y 1990 con un indice de Danceability superior a 85.
+%\begin{lstlisting}[frame=single]
+%MATCH (n:Song) 
+%WHERE n.Year>='1970' AND n.Year<='1990' AND n.Danceability >= '85'
+%RETURN n;
+%\end{lstlisting}
+%
+%\begin{figure}[!h]
+%   \centering
+%   \includegraphics[scale=.45]{imgs/neo4j2.png}
+%\end{figure}
+%\newpage
+%También se puede buscar por algún identificador y al igual que con MongoDB neo4j crea identificadores por cada nodo.
+%\begin{lstlisting}[frame=single]
+%MATCH (n:Song)
+%WHERE ID(n)=7993
+%RETURN n;
+%\end{lstlisting}
+%
+%\begin{figure}[!h]
+%   \centering
+%   \includegraphics[scale=.45]{imgs/neo4j3.png}
+%\end{figure}
+%
+%Para la última consulta se seleccionan las canciones posteriores al año 2000 y con un duración superior a 600 segundos.
+%\begin{lstlisting}[frame=single]
+%MATCH (n:Song)
+%WHERE n.Length>'600' AND n.Year>='2000' 
+%RETURN n;
+%\end{lstlisting}
+%\begin{figure}[!h]
+%   \centering
+%   \includegraphics[scale=.45]{imgs/neo4j4.png}
+%\end{figure}
+%
+%
+%\newpage
+%\section{Cassandra}
+%
+%Cassandra es una base de datos NoSQL distribuida, es decir, que tiene la capacidad de distribuir los datos entre diferentes equipos o nodos que no dependen de un servidor maestro sino que se conectar P2P (peer to peer). Esta base de datos es del tipo clave-valor y usa el lenguaje CQL para realizar las consultas, este es muy similar a SQL sin embargo no tiene la posibilidad de hacer JOINS entre tablas.\cite{cass}
+%\subsection{Instalación en Debian}
+%
+%En este caso Cassandra requiere de Java 8 para su funcionamiento, por lo que se pueden seguir los pasos de \ref{subsec:install} para configurar la versión de Java a utilizar.\\
+%
+%Al igual que el resto de gestores, se debe agregar el repositorio y la llave para firmarlo.
+%
+%\begin{lstlisting}[frame=single, framexrightmargin=30pt]
+%echo "deb https://downloads.apache.org/cassandra/debian 311x main" |
+%sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+%
+%curl https://downloads.apache.org/cassandra/KEYS | 
+%sudo apt-key add -
+%
+%\end{lstlisting}
+%
+%Se actualizan los repositorios y se instala el paquete
+%
+%\begin{lstlisting}[frame=single]
+%sudo apt update
+%sudo apt install cassandra
+%\end{lstlisting}
+%
+%Para ejecutar cassandra como proceso
+%\begin{lstlisting}[frame=single]
+%sudo cassandra -R
+%\end{lstlisting}
+% 
+% Una vez ejecutado se puede acceder a la shell ejecutando el siguiente comando
+%\begin{lstlisting}[frame=single] 
+%cqlsh
+%\end{lstlisting}
+%
+%\subsection{Carga de Datos}
+%
+%El primer paso es crear una base de datos dentro de la shell cqlsh
+%\begin{lstlisting}[frame=single]
+%cqlsh> CREATE KEYSPACE spotify_test WITH replication = {'class':'SimpleStrategy',     'replication_factor':'1'} AND durable_writes= 'true';
+%cqlsh> DESCRIBE KEYSPACES;
+%
+%demo           system_auth  spotify_test        system_traces
+%system_schema  system       system_distributed  tienda_juegos
+%
+%\end{lstlisting}
+%
+%Luego se selecciona la base de datos y se crea una tabla correspondiente que luego reiba los datos del archivo CSV
+%\begin{lstlisting}[frame=single]
+%cqlsh> USE spotify_test;
+%cqlsh:spotify_test>  CREATE TABLE songs ( index_id int, title varchar, artist varchar, genre varchar, year int,BPM int, energy int, danceability int, loudness int, liveness int, valence int, length int, acousticness int, speechiness int, popularity int, PRIMARY KEY(index_id)) ; 
+%cqlsh:spotify_test> COPY songs (index_id , title , artist , genre , year , bpm , energy , danceability , loudness , liveness , valence , length , acousticness , speechiness , popularity ) FROM '/home/yanrri/spotify_all.csv' WITH DELIMITER = ',' AND HEADER = TRUE;
+%Using 3 child processes
+%
+%Starting copy of spotify_test.songs with columns [index_id, title, artist, genre, year, bpm, energy, danceability, loudness, liveness, valence, length, acousticness, speechiness, popularity].
+%Failed to import 1 rows: ParseError - Failed to parse 1,367 : invalid literal for int() with base 10: '1,367',  given up without retries
+%Failed to import 1 rows: ParseError - Failed to parse 1,121 : invalid literal for int() with base 10: '1,121',  given up without retries
+%Failed to import 1 rows: ParseError - Failed to parse 1,412 : invalid literal for int() with base 10: '1,412',  given up without retries
+%Failed to import 1 rows: ParseError - Failed to parse 1,292 : invalid literal for int() with base 10: '1,292',  given up without retries
+%Failed to process 4 rows; failed rows written to import_spotify_test_songs.err
+%Processed: 1994 rows; Rate:    3724 rows/s; Avg. rate:    5413 rows/s
+%1994 rows imported from 1 files in 0.368 seconds (0 skipped).
+%\end{lstlisting}
+%Este último comando arroja error al importar 4 filas, ya que están definidas como valores int pero contiene una coma como separador de miles. Si queremos conservar esas filas será necesario borrar las comas del archivo CSV y volver a realizar la importación.
+%\newpage
+%\subsection{Consultas}
+%
+%Al igual que con el resto de gestores probaremos seleccionar aquellas canciones que son del la banda Coldplay y que tienen un indice de popularidad superior a 80.
+%
+%\begin{lstlisting}[frame=single]
+%cqlsh:spotify_test> SELECT title,artist,genre,popularity,danceability FROM songs WHERE artist='Coldplay' AND popularity>80 ALLOW FILTERING;
+%
+%title            | artist   | genre          | popularity | danceability
+%------------------+----------+----------------+------------+--------------
+%           Yellow | Coldplay | permanent wave |         82 |           43
+% Christmas Lights | Coldplay | permanent wave |         84 |           31
+%          Fix You | Coldplay | permanent wave |         81 |           21
+%    The Scientist | Coldplay | permanent wave |         84 |           56
+%
+%\end{lstlisting}
+%
+%Para la segunda consulta se seleccionan aquellas canciones entre los años 1970 y 1990 que tengan una Danceability mayor a 85.
+%
+%\begin{lstlisting}[frame=single]
+%cqlsh:spotify_test> SELECT title,artist,genre,year,danceability FROM songs WHERE  year>1970 AND year<1990 AND danceability>85 ALLOW FILTERING ;
+%\end{lstlisting}
+%
+%\begin{figure}[!h]
+%   \centering
+%   \includegraphics[scale=.65]{imgs/cql2.png}
+%\end{figure}
+%
+%En este caso la búsqueda por la llave primaria, definida en este caso como el index, no requiere el uso de ALLOW FILTERING, por lo que es mucho más eficiente.
+%\begin{lstlisting}[frame=single]
+%cqlsh:spotify_test> SELECT title,artist,genre,year FROM songs WHERE  index_id=89 ;
+%
+% title                               | artist      | genre      | year
+%-------------------------------------+-------------+------------+------
+% This Is Not America - 2002 Remaster | David Bowie | album rock | 2002
+%\end{lstlisting}
+%\newpage
+%La última consulta consiste en seleccionar aquellas canciones con una duración mayor a 600 segundos (10 minutos) y que sean posteriores al año 2000.
+%
+%\begin{lstlisting}[frame=single]
+%cqlsh:spotify_test> SELECT title,artist,genre,year,length FROM songs WHERE length>600  AND year>2000 ALLOW FILTERING ;
+%
+%title                         | artist          | genre        | year | length
+%------------------------------+-----------------+--------------+------+-------
+%                Tubular Bells |   Mike Oldfield |   album rock | 2012 |   809
+%             Ghost Love Score |       Nightwish |finnish metal | 2004 |   602
+%          Thinking Of A Place |The War On Drugs |  chamber pop | 2017 |   671
+%               I'm going home | Ten Years After |   album rock | 2005 |   639
+%Don't Let Me Be Misunderstood | Santa Esmeralda |        disco | 2003 |   629
+%\end{lstlisting}
+%
+%\newpage
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Conclusiones}
+%A partir de la información documentada se puede destacar que los gestores de bases de datos NoSQL pueden ser sistemas bastante potentes, primero gracias a la gran cantidad de datos que pueden manejar, considerando una buen manejo a la hora de importar o exportar en formatos como JSON o CSV. Por otro lado ofrecen diferentes lenguajes para realizar consultas que son intuitivos y comparten ciertas características con el lenguaje SQL en especial Cassandra con CQL o la posibilidad de relacionar nodos en Neo4j. A partir de esto se han logrado realizar diferentes consultas en las tres bases de datos documentadas sin mayores problemas en la equivalencia de sentencias.
+%
+%Sin duda las bases de datos NoSQL no solo dejan en evidencia su buen desempeño sino que también nos muestra un poco de lo que se puede venir a futuro en dónde cada vez se requieren más y mejores sistemas que administren datos en esta nueva era digital.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{thebibliography}{99}
+\bibitem{mlinux} Manual Linux \url{https://manualinux.eu/gcc.html}
+
+\end{thebibliography}
+\end{document}
