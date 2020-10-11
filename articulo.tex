@@ -12,7 +12,9 @@
 \usepackage{url}
 \usepackage{colortbl}
 \usepackage{lscape}
-\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[skins,listings,breakable]{tcolorbox}
+%\usepackage{listings}
 \lstset{
   literate = {-}{-}1,
   basicstyle=\ttfamily\footnotesize,
@@ -204,293 +206,310 @@ Copyright (C) 2019 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 \end{lstlisting}
-%\newpage
-%\section{Neo4j}
-%Neo4J es una base de datos de grafos con la capacidad de relacionar los datos sin perder la velocidad de consulta que tienen otros gestores NoSQL. Además permite visualizar las consultas a través de los grafos y las relaciones entre nodos.\cite{neo4j}
-%\subsection{Instalación en Debian}
-%\label{subsec:install}
-%Neo4j tiene como dependencia Java 11, en caso de contar con otra versión de Java estas pueden coexistir en el mismo sistema, solo se deberá seleccionar cual se usará por defecto con el siguiente comando.\\
-%
-%\begin{lstlisting}[frame=single,framexrightmargin=60pt]
-%sudo update-alternatives --config java
-%
-%Selection  Path                                      Priority Status
-%-----------------------------------------------------
-%* 0       /usr/lib/jvm/oracle_jdk8/jre/bin/java        2000   auto mode
-%  1       /usr/lib/jvm/java-11-openjdk-amd64/bin/java  1111   manual mode
-%  2       /usr/lib/jvm/oracle_jdk8/jre/bin/java        2000   manual mode
-%
-%Press <enter> to keep the current choice[*], or type selection number:
-%\end{lstlisting}
-%
-%Al igual que con MongoDB se debe agregar la llave y el repositorio a nuestro source.list .\\
-%
-%\begin{lstlisting}[frame=single]
-%wget -O - https://debian.neo4j.com/neotechnology.gpg.key | 
-%sudo apt-key add -
-%
-%echo 'deb https://debian.neo4j.com stable latest' | 
-%sudo tee -a /etc/apt/sources.list.d/neo4j.list
-%
-%\end{lstlisting}
-%
-%Luego se debe actualizar los repositorios y una vez terminado se pueden listar los paquetes que contienen la palabra neo4j para verificar la versión que se encuentra disponible en el repositorio.\\  
-%\begin{lstlisting}[frame=single]
-%sudo apt-get update
-%apt list -a neo4j
-%\end{lstlisting}
-%
-%En este caso la última versión disponible es la 4.1.1 
-%\begin{lstlisting}[frame=single]
-%sudo apt install neo4j=1:4.1.1
-%\end{lstlisting}
-%
-%Una vez instalado se debe correr el servicio
-%\begin{lstlisting}[frame=single]
-%sudo systemctl start neo4j
-%\end{lstlisting}
-%
-%Al levantar el servidor se deberá acceder a \url{http://localhost:7474/} para configurar el usuario y contraseña. Luego de este paso se podrá manejar la base de datos desde el mismo navegador pero también esta disponible el manejo mediante cypher-shell incluido en la instalación de Neo4j.
-%\begin{lstlisting}[frame=single,framexrightmargin=40pt]
-%$cypher-shell
-%username: neo4j
-%password: ************
-%Connected to Neo4j 4.1.0 at neo4j://localhost:7687 as user neo4j.
-%Type :help for a list of available commands or :exit to exit the shell.
-%Note that Cypher queries must end with a semicolon.
-%neo4j@neo4j>
-%\end{lstlisting}
-%\subsection{Carga de Datos}
-%
-%Para importar o exportar datos en Neo4j es necesario instalar el plugin Apoc disponilbe en el repositorio GitHub.\footnote{GitHub Apoc \url{https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/}} En este caso se instalará la versión 4.1.0.2 de Apoc que se corresponde con la versión de Neo4j instalada.
-%
-%Lo primero es descargar el plugin en la carpeta correspondiente.
-%\begin{lstlisting}[frame=single]
-%cd /var/lib/neo4j/plugins
-%sudo wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/
-%releases/download/4.1.0.2/apoc-4.1.0.2-all.jar
-%\end{lstlisting}
-%Luego es necesario activar en la configuración de neo4j el plugin descargado. Si el archivo apoc.conf no existe se crea y se añade la línea que se muestra a continuación.
-%\begin{lstlisting}[frame=single]
-%cd /etc/neo4j
-%sudo vim apoc.conf
-%
-%apoc.export.file.enabled=true
-%apoc.import.file.enabled=true
-%\end{lstlisting}
-%
-%En la configuración general, en el archivo neo4j.conf, se reemplaza la línea comentada por la siguiente.
-%\begin{lstlisting}[frame=single,framexrightmargin=45pt]
-%sudo vim neo4j.conf
-%#dbms.security.procedures.whitelist=apoc.coll.*,apoc.load.*
-%dbms.security.procedures.whitelist=apoc.coll.*,apoc.load.*,apoc.export.*,
-%apoc.create.*
-%\end{lstlisting}
-%
-%Por último se reinicia el servicio
-%\begin{lstlisting}[frame=single]
-%sudo systemctl start neo4j
-%\end{lstlisting}
-%
-%Antes de iniciar la importación se puede copiar el archivo CSV al directorio por defecto que tiene Neo4j (/var/lib/neo4j/import/ ). Además es necesario modificar el encabezado ya que contiene espacios y al usar la función de apoc para crear nodos, no permite el uso de espacios en los identificadores.
-% 
-%Para la importación dentro de la consola de cypher-shell
-%\begin{lstlisting}[frame=single,framexrightmargin=65pt]
-%> CALL apoc.load.csv('spotify_all.csv', {header:true}) YIELD map
-%WITH map
-%MERGE (sname:Song{Title:map.Title,Artist:map.Artist,Top_Genre:map.Top_Genre,
-%Year: map.Year,BPM: map.BPM,Energy: map.Energy,
-%Danceability:map.Danceability,Loudness:map.Loudness,Liveness:map.Liveness,
-%Valence:map.Valence,Length:map.Length,Acousticness:map.Acousticness,
-%Speechiness:map.Speechiness,Popularity:map.Popularity})
-%RETURN count(*);
-%+----------+
-%| count(*) |
-%+----------+
-%| 1994     |
-%+----------+
-%
-%1 row available after 59 ms, consumed after another 1370 ms
-%Added 1994 nodes, Set 27916 properties, Added 1994 labels
-%\end{lstlisting}
-%\subsection{Consultas}
-%En este caso para obtener las consulas de manera más visual se usará el browser de neo4j accesible desde \url{localhost:7474}
-%
-%La primera consulta consiste en seleccionar las canciones de la banda Coldplay que tengan una popularidad mayor a 80.
-%
-%\begin{lstlisting}[frame=single]
-%MATCH (n:Song {Artist:'Coldplay'}) 
-%WHERE n.Popularity>='80'
-%RETURN n;
-%\end{lstlisting}
-%\begin{figure}[!h]
-%   \centering
-%   \includegraphics[scale=.45]{imgs/neo4j1.png}
-%\end{figure}
-%
-%Para la segunda consulta se selecciona las canciones entre los años 1970 y 1990 con un indice de Danceability superior a 85.
-%\begin{lstlisting}[frame=single]
-%MATCH (n:Song) 
-%WHERE n.Year>='1970' AND n.Year<='1990' AND n.Danceability >= '85'
-%RETURN n;
-%\end{lstlisting}
-%
-%\begin{figure}[!h]
-%   \centering
-%   \includegraphics[scale=.45]{imgs/neo4j2.png}
-%\end{figure}
-%\newpage
-%También se puede buscar por algún identificador y al igual que con MongoDB neo4j crea identificadores por cada nodo.
-%\begin{lstlisting}[frame=single]
-%MATCH (n:Song)
-%WHERE ID(n)=7993
-%RETURN n;
-%\end{lstlisting}
-%
-%\begin{figure}[!h]
-%   \centering
-%   \includegraphics[scale=.45]{imgs/neo4j3.png}
-%\end{figure}
-%
-%Para la última consulta se seleccionan las canciones posteriores al año 2000 y con un duración superior a 600 segundos.
-%\begin{lstlisting}[frame=single]
-%MATCH (n:Song)
-%WHERE n.Length>'600' AND n.Year>='2000' 
-%RETURN n;
-%\end{lstlisting}
-%\begin{figure}[!h]
-%   \centering
-%   \includegraphics[scale=.45]{imgs/neo4j4.png}
-%\end{figure}
-%
-%
-%\newpage
-%\section{Cassandra}
-%
-%Cassandra es una base de datos NoSQL distribuida, es decir, que tiene la capacidad de distribuir los datos entre diferentes equipos o nodos que no dependen de un servidor maestro sino que se conectar P2P (peer to peer). Esta base de datos es del tipo clave-valor y usa el lenguaje CQL para realizar las consultas, este es muy similar a SQL sin embargo no tiene la posibilidad de hacer JOINS entre tablas.\cite{cass}
-%\subsection{Instalación en Debian}
-%
-%En este caso Cassandra requiere de Java 8 para su funcionamiento, por lo que se pueden seguir los pasos de \ref{subsec:install} para configurar la versión de Java a utilizar.\\
-%
-%Al igual que el resto de gestores, se debe agregar el repositorio y la llave para firmarlo.
-%
-%\begin{lstlisting}[frame=single, framexrightmargin=30pt]
-%echo "deb https://downloads.apache.org/cassandra/debian 311x main" |
-%sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-%
-%curl https://downloads.apache.org/cassandra/KEYS | 
-%sudo apt-key add -
-%
-%\end{lstlisting}
-%
-%Se actualizan los repositorios y se instala el paquete
-%
-%\begin{lstlisting}[frame=single]
-%sudo apt update
-%sudo apt install cassandra
-%\end{lstlisting}
-%
-%Para ejecutar cassandra como proceso
-%\begin{lstlisting}[frame=single]
-%sudo cassandra -R
-%\end{lstlisting}
-% 
-% Una vez ejecutado se puede acceder a la shell ejecutando el siguiente comando
-%\begin{lstlisting}[frame=single] 
-%cqlsh
-%\end{lstlisting}
-%
-%\subsection{Carga de Datos}
-%
-%El primer paso es crear una base de datos dentro de la shell cqlsh
-%\begin{lstlisting}[frame=single]
-%cqlsh> CREATE KEYSPACE spotify_test WITH replication = {'class':'SimpleStrategy',     'replication_factor':'1'} AND durable_writes= 'true';
-%cqlsh> DESCRIBE KEYSPACES;
-%
-%demo           system_auth  spotify_test        system_traces
-%system_schema  system       system_distributed  tienda_juegos
-%
-%\end{lstlisting}
-%
-%Luego se selecciona la base de datos y se crea una tabla correspondiente que luego reiba los datos del archivo CSV
-%\begin{lstlisting}[frame=single]
-%cqlsh> USE spotify_test;
-%cqlsh:spotify_test>  CREATE TABLE songs ( index_id int, title varchar, artist varchar, genre varchar, year int,BPM int, energy int, danceability int, loudness int, liveness int, valence int, length int, acousticness int, speechiness int, popularity int, PRIMARY KEY(index_id)) ; 
-%cqlsh:spotify_test> COPY songs (index_id , title , artist , genre , year , bpm , energy , danceability , loudness , liveness , valence , length , acousticness , speechiness , popularity ) FROM '/home/yanrri/spotify_all.csv' WITH DELIMITER = ',' AND HEADER = TRUE;
-%Using 3 child processes
-%
-%Starting copy of spotify_test.songs with columns [index_id, title, artist, genre, year, bpm, energy, danceability, loudness, liveness, valence, length, acousticness, speechiness, popularity].
-%Failed to import 1 rows: ParseError - Failed to parse 1,367 : invalid literal for int() with base 10: '1,367',  given up without retries
-%Failed to import 1 rows: ParseError - Failed to parse 1,121 : invalid literal for int() with base 10: '1,121',  given up without retries
-%Failed to import 1 rows: ParseError - Failed to parse 1,412 : invalid literal for int() with base 10: '1,412',  given up without retries
-%Failed to import 1 rows: ParseError - Failed to parse 1,292 : invalid literal for int() with base 10: '1,292',  given up without retries
-%Failed to process 4 rows; failed rows written to import_spotify_test_songs.err
-%Processed: 1994 rows; Rate:    3724 rows/s; Avg. rate:    5413 rows/s
-%1994 rows imported from 1 files in 0.368 seconds (0 skipped).
-%\end{lstlisting}
-%Este último comando arroja error al importar 4 filas, ya que están definidas como valores int pero contiene una coma como separador de miles. Si queremos conservar esas filas será necesario borrar las comas del archivo CSV y volver a realizar la importación.
-%\newpage
-%\subsection{Consultas}
-%
-%Al igual que con el resto de gestores probaremos seleccionar aquellas canciones que son del la banda Coldplay y que tienen un indice de popularidad superior a 80.
-%
-%\begin{lstlisting}[frame=single]
-%cqlsh:spotify_test> SELECT title,artist,genre,popularity,danceability FROM songs WHERE artist='Coldplay' AND popularity>80 ALLOW FILTERING;
-%
-%title            | artist   | genre          | popularity | danceability
-%------------------+----------+----------------+------------+--------------
-%           Yellow | Coldplay | permanent wave |         82 |           43
-% Christmas Lights | Coldplay | permanent wave |         84 |           31
-%          Fix You | Coldplay | permanent wave |         81 |           21
-%    The Scientist | Coldplay | permanent wave |         84 |           56
-%
-%\end{lstlisting}
-%
-%Para la segunda consulta se seleccionan aquellas canciones entre los años 1970 y 1990 que tengan una Danceability mayor a 85.
-%
-%\begin{lstlisting}[frame=single]
-%cqlsh:spotify_test> SELECT title,artist,genre,year,danceability FROM songs WHERE  year>1970 AND year<1990 AND danceability>85 ALLOW FILTERING ;
-%\end{lstlisting}
-%
-%\begin{figure}[!h]
-%   \centering
-%   \includegraphics[scale=.65]{imgs/cql2.png}
-%\end{figure}
-%
-%En este caso la búsqueda por la llave primaria, definida en este caso como el index, no requiere el uso de ALLOW FILTERING, por lo que es mucho más eficiente.
-%\begin{lstlisting}[frame=single]
-%cqlsh:spotify_test> SELECT title,artist,genre,year FROM songs WHERE  index_id=89 ;
-%
-% title                               | artist      | genre      | year
-%-------------------------------------+-------------+------------+------
-% This Is Not America - 2002 Remaster | David Bowie | album rock | 2002
-%\end{lstlisting}
-%\newpage
-%La última consulta consiste en seleccionar aquellas canciones con una duración mayor a 600 segundos (10 minutos) y que sean posteriores al año 2000.
-%
-%\begin{lstlisting}[frame=single]
-%cqlsh:spotify_test> SELECT title,artist,genre,year,length FROM songs WHERE length>600  AND year>2000 ALLOW FILTERING ;
-%
-%title                         | artist          | genre        | year | length
-%------------------------------+-----------------+--------------+------+-------
-%                Tubular Bells |   Mike Oldfield |   album rock | 2012 |   809
-%             Ghost Love Score |       Nightwish |finnish metal | 2004 |   602
-%          Thinking Of A Place |The War On Drugs |  chamber pop | 2017 |   671
-%               I'm going home | Ten Years After |   album rock | 2005 |   639
-%Don't Let Me Be Misunderstood | Santa Esmeralda |        disco | 2003 |   629
-%\end{lstlisting}
-%
-%\newpage
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Conclusiones}
-%A partir de la información documentada se puede destacar que los gestores de bases de datos NoSQL pueden ser sistemas bastante potentes, primero gracias a la gran cantidad de datos que pueden manejar, considerando una buen manejo a la hora de importar o exportar en formatos como JSON o CSV. Por otro lado ofrecen diferentes lenguajes para realizar consultas que son intuitivos y comparten ciertas características con el lenguaje SQL en especial Cassandra con CQL o la posibilidad de relacionar nodos en Neo4j. A partir de esto se han logrado realizar diferentes consultas en las tres bases de datos documentadas sin mayores problemas en la equivalencia de sentencias.
-%
-%Sin duda las bases de datos NoSQL no solo dejan en evidencia su buen desempeño sino que también nos muestra un poco de lo que se puede venir a futuro en dónde cada vez se requieren más y mejores sistemas que administren datos en esta nueva era digital.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Compilando Librería KD-tree}
+
+El primer paso es descargar el código fuente desde el repositorio oficial.
+\begin{lstlisting}[frame=single]
+$ wget http://nuclear.mutantstargoat.com/sw/kdtree/files/kdtree-0.5.7.tar.gz
+$ tar -xzvf kdtree-0.5.7
+$ cd kdtree-0.5.7/
+\end{lstlisting}
+
+Una vez listo se procede a configurar la librería y hacer la compilación.
+\begin{lstlisting}[frame=single]
+$ ./configure
+$ make
+\end{lstlisting}
+
+\subsubsection{Creando Programa con la libraría KD-tree}
+
+Se usa como base el ejemplo test2 incluido en el código fuente y se modifica para que solicite un punto inicial y el radio de búsqueda en el árbol. Quedando un programa como el siguiente.
+
+\begin{tcblisting}{breakable,listing only,
+  listing options={language=c,aboveskip=0pt,belowskip=0pt},
+  size=fbox,boxrule=0pt,frame hidden,arc=0pt,colback=lightgray}
+#include <assert.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <time.h>
+#include "kdtree.h"
+
+#define DEF_NUM_PTS 10
+
+/* entrega la distancia euclidiana entre 2 puntos */
+static double dist_sq( double *a1, double *a2, int dims );
+
+/* numero random entre -10 y 10 */
+static double rd( void );
+
+int main(int argc, char **argv) {
+  printf("Kd-tree de 3 dimensiones\n");
+  int i, num_pts = DEF_NUM_PTS;
+  void *ptree;
+  char *data, *pch;
+  struct kdres *presults;
+  double pos[3], dist;
+  double pt[3];
+  printf("Ingrese un numero de 3 dimensiones: (Separado por un espacio) ");
+  scanf("%lf %lf %lf", &pt[0],&pt[1],&pt[2]);
+  double radius;
+  printf("Ingrese el radio de busqueda: ");
+  scanf("%lf", &radius);
+  if(argc > 1 && isdigit(argv[1][0])) {
+    num_pts = atoi(argv[1]);
+  }
+  if(!(data = malloc(num_pts))) {
+    perror("malloc failed");
+    return 1;
+  }
+  srand( time(0) );
+  /* Se crea el arbol kd-tree con 3 dimensiones */
+  ptree = kd_create( 3 );
+  /* Se agregan nodos con datos random al arbol */
+  for( i=0; i<num_pts; i++ ) {
+    data[i] = 'a' + i;
+    assert( 0 == kd_insert3( ptree, rd(), rd(), rd(), &data[i] ) );
+  }
+  /* busca los nodos mas cercanos al punto entregado en el radio entregado por e                                                                                                                            l usuario */
+  presults = kd_nearest_range( ptree, pt, radius );
+  /* imprime los resultados */
+  printf( "found %d results:\n", kd_res_size(presults) );
+
+  while( !kd_res_end( presults ) ) {
+    /* se obtiene las coordenadas de cada nodo con resultados */
+    pch = (char*)kd_res_item( presults, pos );
+
+    /* calcula la distancia euclidiana entre el resultado del arbol y punto ingr                                                                                                                            esado por el usuario */
+    dist = sqrt( dist_sq( pt, pos, 3 ) );
+
+    /* Se imprimen los datos calculados */
+    printf( "node at (%.3f, %.3f, %.3f) is %.3f away and has data=%c\n",
+            pos[0], pos[1], pos[2], dist, *pch );
+    /* Se recorre el siguiente resultado */
+    kd_res_next( presults );
+  }
+  /* libera la memoria utilizada de las estructuras definidas anteriormente */
+  free( data );
+  kd_res_free( presults );
+  kd_free( ptree );
+
+  return 0;
+}
+static double dist_sq( double *a1, double *a2, int dims ) {
+  double dist_sq = 0, diff;
+  while( --dims >= 0 ) {
+    diff = (a1[dims] - a2[dims]);
+    dist_sq += diff*diff;
+  }
+  return dist_sq;
+}
+static double rd( void ) {
+  return (double)rand()/RAND_MAX * 20.0 - 10.0;
+}
+\end{tcblisting}
+
+
+Con el código listo se crea el archivo Makefile para hacer su compilación, en dónde se debe considerar la ruta en donde se encuentra la librería kd-tree. Quedando como se muestra en la siguiente imagen.
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.72]{imgs/makefile_kdtree.png}
+   \caption{Makefile importando librería KD-Tree}
+   \label{fig1}
+\end{figure}
+
+\subsubsection{Compilación y Prueba del programa}
+
+Se procede a compilar con make y ejecutar el el programa
+
+\begin{lstlisting}[frame=single]
+$ make
+$ ./test2
+\end{lstlisting}
+
+Como se mencionó anteriormente el programa solicita datos al usuario y luego realiza la búsqueda en un árbol kd-tree generado con números al azar. En la siguiente imagen se muestra su ejecución.
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.72]{imgs/kdtree.png}
+   \caption{Ejecución del programa con KD-tree}
+   \label{fig2}
+\end{figure}
 \newpage
+
+\subsection{Compilando el Kernel}
+
+\subsubsection{Descarga y Configuración}
+
+Primero es necesario saber que versión del kernel viene instalada en nuestro sistema, para ello usamos el siguiente comando.
+
+\begin{lstlisting}[frame=single]
+$ uname -a
+Linux admSist6 4.19.0-10-amd64 #1 SMP Debian 4.19.132-1 (2020-07-24) x86_64 GNU/Linux
+\end{lstlisting}
+
+Ahora se procede a descargar la última version estable del kernel
+
+\begin{lstlisting}[frame=single]
+$ wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.14.tar.xz
+\end{lstlisting}
+
+Se descomprime el paquete
+
+\begin{lstlisting}[frame=single]
+$ tar axvf linux-5.8.14.tar.xz
+\end{lstlisting}
+
+En caso de haber realizado otra configuración en el actual directorio, es necesario limpiar con los siguientes comandos.
+
+\begin{lstlisting}[frame=single]
+$ make distclean
+$ make clean
+\end{lstlisting}
+
+Luego se debe copiar la configuración con la cuál se configuró el kernel instalado en nuestra máquina.
+\begin{lstlisting}[frame=single]
+$ cp /boot/config-4.19.0-10-amd64 .config
+\end{lstlisting}
+
+Ahora se carga esta configuración anterior para el nuevo kernel
+\begin{lstlisting}[frame=single]
+$ yes "" | make oldconfig
+\end{lstlisting}
+
+En este caso puede arrojar algunos errores de dependencias, en este caso fue necesario instalar flex y bison
+
+\begin{lstlisting}[frame=single]
+$ apt install flex
+$ apt install bison
+\end{lstlisting}
+
+También se puede desplegar un menú en la consola para ver todas las opciones de configuración 
+\begin{lstlisting}[frame=single]
+$ make menuconfig
+\end{lstlisting}
+
+\newpage
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.39]{imgs/config_kernel2.png}
+   \caption{Menú de Configuración del Kernel}
+   \label{fig3}
+\end{figure}
+
+Se deben seleccionar las opciones dependiendo del cada sistema y los requerimientos. Para este caso se cambio la configuración específica al tipo de CPU y se desactivó drivers de audio que no serán utilizados.
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.40]{imgs/conf_kernel3.png}
+   \caption{Configuración de la familia del CPU}
+   \label{fig4}
+\end{figure}
+
+Una vez configurado se guarda todo y si vemos el contenido del archivo .config se encuentran todos los parámetros de configuración para instalar el nuevo kernel.
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.39]{imgs/conf_kernel.png}
+   \caption{Archivo de Configuración del Kernel}
+   \label{fig5}
+\end{figure}
+
+Dentro de este archivo es importante modificar la línea que hacer referencia al certificado del kernel anterior.
+\begin{lstlisting}[frame=single]
+$ nano .config
+CONFIG_SYSTEM_TRUSTED_KEYS=""
+\end{lstlisting}
+
+Además se puede deshabilitar la línea que crea una imagen dbg con la información del debug del kernel, esto permite que la imagen sea mucho más pequeña y así no quedarse sin espacio durante la compilación.
+
+
+\begin{lstlisting}[frame=single]
+$ nano .config
+CONFIG_DEBUG_INFO=n
+\end{lstlisting}
+
+\subsubsection{Screen y Compilación}
+Ahora quedaría compilar el kernel, para lo cual se hizó una prueba en dos máquinas , una alojada en un servidor remoto y otra localmente. 
+
+\begin{itemize}
+\item La máquina remota cuenta con 2 CPUs con 2 hilos de AMD a 2.7 GHz y 2 GB RAM 
+\item La máquina local cuenta con 8 CPUs  con 16 hilos de Intel a 5.0 GHz y 16 GB RAM
+\end{itemize}
+
+Para la máquina remota se configuró el uso de screen que es un software de terminales virtuales que permiten dejar el proceso de compilación corriendo sin necesidad de estar conectado todo el tiempo al servidor remoto.
+
+Instalación de screen
+\begin{lstlisting}[frame=single]
+$ apt install screen
+\end{lstlisting}
+
+Se crea una terminal en screen con nombre
+\begin{lstlisting}[frame=single]
+$ screen -S kernel
+\end{lstlisting}
+
+Esto nos deja lista la terminal para lanzar un proceso de larga duración en nuestro servidor remoto. Para salir se esta terminal se debe apretar CTR + A + D. Para volver a la terminal creada se pueden listar las terminales de screen creadas
+\begin{lstlisting}[frame=single]
+$ screen -ls
+There is a screen on:
+        30906.kernel    (10/10/2020 07:47:05 PM)        (Detached)
+1 Socket in /run/screen/S-root.
+\end{lstlisting}
+
+Con esto podemos volver a conectarnos a esa terminal
+\begin{lstlisting}[frame=single]
+$ screen -r 30906.kernel
+\end{lstlisting}
+
+Finalmente dejamos corriendo la compilación del kernel
+ 
+\begin{lstlisting}[frame=single]
+$ make -j2 deb-pkg
+\end{lstlisting}
+
+
+Para la máquina local se usó 
+\begin{lstlisting}[frame=single]
+$ make -j16 deb-pkg
+\end{lstlisting}
+
+Los tiempos de ejecución en la máquina remota fueron los siguientes
+\begin{lstlisting}[frame=single]
+real    96m49.182s
+user    168m48.511s
+sys     20m3.484s
+\end{lstlisting}
+
+Mientras que en la máquina local
+\begin{lstlisting}[frame=single]
+real    11m7.837s
+user    129m13.261s
+sys     16m43.976s
+\end{lstlisting}
+
+\subsubsection{Instalación de la imagen}
+
+Una vez terminado el proceso de compilación solo quedaría instalar la imagen .deb generada
+\begin{lstlisting}[frame=single]
+$ cd ..
+$ dpkg -i dpkg -i linux-image-5.8.14_5.8.14-1_amd64.deb
+\end{lstlisting}
+
+Terminada la instalación se reinicia la máquina para que arranque con el nuevo kernel. 
+\begin{lstlisting}[frame=single]
+$ shutdown -r now
+\end{lstlisting}
+Si la máquina vuelve arrancar se puede verificar el kernel instalado
+\begin{lstlisting}[frame=single]
+$ uname -a
+Linux admSist6 5.8.14 #1 SMP Sun Oct 11 04:00:29 -03 2020 x86_64 GNU/Linux
+\end{lstlisting}
+\newpage
+
 \begin{thebibliography}{99}
 \bibitem{mlinux} Manual Linux \url{https://manualinux.eu/gcc.html}
 

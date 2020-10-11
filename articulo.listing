@@ -1,0 +1,80 @@
+#include <assert.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <time.h>
+#include "kdtree.h"
+
+#define DEF_NUM_PTS 10
+
+/* entrega la distancia euclidiana entre 2 puntos */
+static double dist_sq( double *a1, double *a2, int dims );
+
+/* numero random entre -10 y 10 */
+static double rd( void );
+
+int main(int argc, char **argv) {
+  printf("Kd-tree de 3 dimensiones\n");
+  int i, num_pts = DEF_NUM_PTS;
+  void *ptree;
+  char *data, *pch;
+  struct kdres *presults;
+  double pos[3], dist;
+  double pt[3];
+  printf("Ingrese un numero de 3 dimensiones: (Separado por un espacio) ");
+  scanf("%lf %lf %lf", &pt[0],&pt[1],&pt[2]);
+  double radius;
+  printf("Ingrese el radio de busqueda: ");
+  scanf("%lf", &radius);
+  if(argc > 1 && isdigit(argv[1][0])) {
+    num_pts = atoi(argv[1]);
+  }
+  if(!(data = malloc(num_pts))) {
+    perror("malloc failed");
+    return 1;
+  }
+  srand( time(0) );
+  /* Se crea el arbol kd-tree con 3 dimensiones */
+  ptree = kd_create( 3 );
+  /* Se agregan nodos con datos random al arbol */
+  for( i=0; i<num_pts; i++ ) {
+    data[i] = 'a' + i;
+    assert( 0 == kd_insert3( ptree, rd(), rd(), rd(), &data[i] ) );
+  }
+  /* busca los nodos mas cercanos al punto entregado en el radio entregado por e                                                                                                                            l usuario */
+  presults = kd_nearest_range( ptree, pt, radius );
+  /* imprime los resultados */
+  printf( "found %d results:\n", kd_res_size(presults) );
+
+  while( !kd_res_end( presults ) ) {
+    /* se obtiene las coordenadas de cada nodo con resultados */
+    pch = (char*)kd_res_item( presults, pos );
+
+    /* calcula la distancia euclidiana entre el resultado del arbol y punto ingr                                                                                                                            esado por el usuario */
+    dist = sqrt( dist_sq( pt, pos, 3 ) );
+
+    /* Se imprimen los datos calculados */
+    printf( "node at (%.3f, %.3f, %.3f) is %.3f away and has data=%c\n",
+            pos[0], pos[1], pos[2], dist, *pch );
+    /* Se recorre el siguiente resultado */
+    kd_res_next( presults );
+  }
+  /* libera la memoria utilizada de las estructuras definidas anteriormente */
+  free( data );
+  kd_res_free( presults );
+  kd_free( ptree );
+
+  return 0;
+}
+static double dist_sq( double *a1, double *a2, int dims ) {
+  double dist_sq = 0, diff;
+  while( --dims >= 0 ) {
+    diff = (a1[dims] - a2[dims]);
+    dist_sq += diff*diff;
+  }
+  return dist_sq;
+}
+static double rd( void ) {
+  return (double)rand()/RAND_MAX * 20.0 - 10.0;
+}
