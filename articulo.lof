@@ -1,6 +1,7 @@
 \babel@toc {spanish}{}
-\contentsline {figure}{\numberline {1}{\ignorespaces Makefile importando librería KD-Tree}}{10}{figure.1}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Ejecución del programa con KD-tree}}{10}{figure.2}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Menú de Configuración del Kernel}}{12}{figure.3}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Configuración de la familia del CPU}}{12}{figure.4}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Archivo de Configuración del Kernel}}{12}{figure.5}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Makefile importando librería KD-Tree}}{11}{figure.1}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Ejecución del programa con KD-tree}}{11}{figure.2}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Menú de Configuración del Kernel}}{13}{figure.3}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Configuración de la familia del CPU}}{13}{figure.4}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Archivo de Configuración del Kernel}}{13}{figure.5}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Archivo config de ssh para establecer conexión remota mediante un túnel}}{18}{figure.6}%

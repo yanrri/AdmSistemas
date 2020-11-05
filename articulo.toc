@@ -1,14 +1,20 @@
 \babel@toc {spanish}{}
-\contentsline {section}{\numberline {1}Introducción}{4}{section.1}%
-\contentsline {section}{\numberline {2}Compilando programas, librerías, kernel}{5}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Compilando el compilador GCC}{5}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Prerequisitos GCC 9.3}{5}{subsubsection.2.1.1}%
-\contentsline {subsubsection}{\numberline {2.1.2}Descarga y Configuración GCC 9.3}{6}{subsubsection.2.1.2}%
-\contentsline {subsubsection}{\numberline {2.1.3}Instalación GCC 9.3}{7}{subsubsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.2}Compilando Librería KD-tree}{7}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Creando Programa con la libraría KD-tree}{8}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Compilación y Prueba del programa}{10}{subsubsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.3}Compilando el Kernel}{11}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Descarga y Configuración}{11}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Screen y Compilación}{13}{subsubsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.3}Instalación de la imagen}{14}{subsubsection.2.3.3}%
+\contentsline {section}{\numberline {1}Introducción}{5}{section.1}%
+\contentsline {section}{\numberline {2}Compilando programas, librerías, kernel}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Compilando el compilador GCC}{6}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Prerequisitos GCC 9.3}{6}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Descarga y Configuración GCC 9.3}{7}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}Instalación GCC 9.3}{8}{subsubsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.2}Compilando Librería KD-tree}{8}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Creando Programa con la libraría KD-tree}{9}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Compilación y Prueba del programa}{11}{subsubsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.3}Compilando el Kernel}{12}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Descarga y Configuración}{12}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Screen y Compilación}{14}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Instalación de la imagen}{15}{subsubsection.2.3.3}%
+\contentsline {section}{\numberline {3}Acceso Remoto}{16}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Telnet}{16}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}SSH}{16}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Configuración SSH}{17}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Conexión por túnel}{18}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3} SSHFS: Montar archivos remotos}{18}{subsubsection.3.2.3}%

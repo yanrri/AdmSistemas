@@ -509,9 +509,138 @@ $ uname -a
 Linux admSist6 5.8.14 #1 SMP Sun Oct 11 04:00:29 -03 2020 x86_64 GNU/Linux
 \end{lstlisting}
 \newpage
+\section{Acceso Remoto}
+\subsection{Telnet}
 
+Primero es necesario la instalación de telnet
+\begin{lstlisting}[frame=single]
+$ sudo apt install telnetd
+\end{lstlisting}
+
+Una vez instalado se debe correr el servicio para poder utilizarlo
+\begin{lstlisting}[frame=single]
+$ sudo systemctl start inetd
+\end{lstlisting}
+
+Antes de establecer una conexión a otra máquina de forma remota, es necesario crear un nuevo usuario y asignándole un directorio y una contraseña.
+
+Para crear un usuario y asignarle un directorio en /home usamos el siguiente comando.
+
+\begin{lstlisting}[frame=single]
+$ sudo useradd -m -s /bin/bash nirojas
+\end{lstlisting}
+
+Luego para asignarle una contraseña 
+
+\begin{lstlisting}[frame=single]
+$ sudo passwd nirojas
+New password:
+Retype new password:
+passwd: password updated successfully
+\end{lstlisting}
+
+Ahora ya podremos conectarnos mediante telnet
+\begin{lstlisting}[frame=single]
+$ telnet 10.1.1.33 -l nirojas
+Trying 10.1.1.33...
+Connected to 10.1.1.33.
+Escape character is '^]'.
+Password:
+\end{lstlisting}
+
+\subsection{SSH}
+
+SSH es un protocolo que permite al igual que telnet permite la conexión remota a otra máquina, la diferencia es que SSH utiliza un canal seguro, usando un sistema de cifrado para enviar y recibir la información.\cite{ssh}
+
+\subsubsection{Configuración SSH}
+
+Para conectarse por ssh a un host remoto es necesario especificar el usuario seguido de la dirección ip o hostname de la máquina remota.
+
+\begin{lstlisting}[frame=single]
+$ ssh nirojas@bioinfo.utalca.cl
+nirojas@bioinfo.utalca.cl's password:
+\end{lstlisting}
+
+Para facilitar el ingreso se puede modificar el archivo config ( crear si no existe), para crear un alias a la conexión remota.
+\begin{lstlisting}[frame=single]
+$ vim .ssh/config
+
+Host bioinfo
+user nirojas
+hostname bioinfo.utalca.cl
+\end{lstlisting}
+
+Además es posible generar una llave encriptada rsa para acceder al host remoto sin indicar la contraseña cada vez que se intente conectar.
+
+Primero se genera una llave rsa que permitirá identificar a nuestro usuario y máquina local.
+
+\begin{lstlisting}[frame=single]
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/yanrri/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/yanrri/.ssh/id_rsa.
+Your public key has been saved in /home/yanrri/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:OUkuYjpu7B/wQDdGJoWH84L0P+oBUfTHCprmp6UMTlQ yanrri@CEBOYAN
+The key's randomart image is:
++---[RSA 2048]----+
+|  o*+            |
+| .=+o .          |
+|.ooE+. o.        |
+|..*+o.oo o       |
+| *o.+.. S        |
+|+ .* + . .       |
+|.+o++ .          |
+|=.Bo..           |
+| B+o.            |
++----[SHA256]-----+
+\end{lstlisting}
+  
+Luego es necesario crear el directiorio .ssh/ en el host remoto en caso de que no haya sido creado con anterioridad.
+
+\begin{lstlisting}[frame=single]
+$ ssh bioinfo mkdir -p .ssh
+\end{lstlisting}
+
+
+Finalemnte se copia la llave generada anteriormente en el archivo que almacena las claves autorizadas para realizar conexión sin password. 
+\begin{lstlisting}[frame=single]
+$ cat cat ~/.ssh/id_rsa.pub | ssh bioinfo 'cat >> .ssh/authorized_keys'
+\end{lstlisting}
+
+\subsubsection{Conexión por túnel}
+
+En algunos casos para conectarse a un equipo, se requiere un host remoto intermedio que haga un túnel al host remoto final.
+
+El host intermedio se puede agregar a la configuración ssh quedando como la siguiente imagen. 
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.82]{imgs/proxy_config.PNG}
+   \caption{Archivo config de ssh para establecer conexión remota mediante un túnel}
+   \label{fig6}
+\end{figure}
+
+La imagen muestra en 'proxycommnad' el host que actua como túnel para establecer la conexión con el host remoto final. En este caso se usa el servidor bioinfo.utalca.cl para poder conectarse a la máquina con dirección IP 10.1.1.36 con el usuario alumno.
+
+Finalmente si se desea conectar a través de un túnel sin indicar contraseña por cada conexión, es necesario copiar la clave rsa tanto en el host intermedio como el host final.
+
+\subsubsection{ SSHFS: Montar archivos remotos}
+
+Otro aspecto interesante de las conexiones remotas es la posibilidad de acceder a los archivos de un host remoto directamente desde nuestra máquina local, para ello existen varias opciones una de ellas es usar el protocolo seguro de SSH con el software SSHFS que permite montar un directorio remoto como se muestra en el siguiente comando.
+
+\begin{lstlisting}[frame=single]
+sshfs alumno@10.1.1.36:RemoteFolder/ ~/Documents/ -o ssh_command='ssh -J nirojas@bioinfo.utalca.cl'
+\end{lstlisting}
+
+En este caso se agregó la opción \emph{ssh\_command} para lograr la conexión mediante un túnel.
+
+%--------------%
+\newpage
 \begin{thebibliography}{99}
 \bibitem{mlinux} Manual Linux \url{https://manualinux.eu/gcc.html}
-
+\bibitem{ssh} SSH \url{https://es.wikipedia.org/wiki/Secure_Shell}
 \end{thebibliography}
 \end{document}

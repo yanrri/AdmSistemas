@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.10.2)  11 OCT 2020 17:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.10.2)  4 NOV 2020 23:25
 entering extended mode
 **./articulo.tex
 (articulo.tex
@@ -751,7 +751,7 @@ LaTeX Info: Redefining \nameref on input line 27.
 
 ABD: EveryShipout initializing macros
 \c@lstlisting=\count297
-<imgs/logo.png, id=58, 202.7575pt x 250.9375pt>
+<imgs/logo.png, id=82, 202.7575pt x 250.9375pt>
 File: imgs/logo.png Graphic file (type png)
 <use imgs/logo.png>
 Package pdftex.def Info: imgs/logo.png  used on input line 32.
@@ -772,15 +772,14 @@ LaTeX Info: Redefining \% on input line 1.
 \tf@toc=\write7
 \openout7 = `articulo.toc'.
 
- [2] (articulo.lof
+ [2] [3] (articulo.lof
 LaTeX Info: Redefining \. on input line 1.
 LaTeX Info: Redefining \% on input line 1.
 )
 \tf@lof=\write8
 \openout8 = `articulo.lof'.
 
-
-[3] [4]
+ [4] [5]
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 9
 2.
 
@@ -793,7 +792,7 @@ LaTeX Font Info:    Trying to load font information for TS1+pcr on input line 9
 (C:\Users\nemos\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pcr.fd
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 )
-[5] [6] [7]
+[6] [7] [8]
 \openout4 = `articulo.listing'.
 
 
@@ -820,53 +819,59 @@ Overfull \hbox (318.25273pt too wide) in paragraph at lines 54--55
 [][] 
  []
 
-) [8] [9]
-<imgs/makefile_kdtree.png, id=280, 316.93407pt x 255.20343pt>
+) [9] [10]
+<imgs/makefile_kdtree.png, id=316, 316.93407pt x 255.20343pt>
 File: imgs/makefile_kdtree.png Graphic file (type png)
 <use imgs/makefile_kdtree.png>
 Package pdftex.def Info: imgs/makefile_kdtree.png  used on input line 319.
 (pdftex.def)             Requested size: 228.19235pt x 183.74632pt.
-<imgs/kdtree.png, id=281, 411.03563pt x 91.84312pt>
+<imgs/kdtree.png, id=317, 411.03563pt x 91.84312pt>
 File: imgs/kdtree.png Graphic file (type png)
 <use imgs/kdtree.png>
 Package pdftex.def Info: imgs/kdtree.png  used on input line 337.
 (pdftex.def)             Requested size: 295.94542pt x 66.12698pt.
- [10 <./imgs/makefile_kdtree.png> <./imgs/kdtree.png>] [11]
-<imgs/config_kernel2.png, id=314, 536.0025pt x 429.85594pt>
+ [11 <./imgs/makefile_kdtree.png> <./imgs/kdtree.png>] [12]
+<imgs/config_kernel2.png, id=350, 536.0025pt x 429.85594pt>
 File: imgs/config_kernel2.png Graphic file (type png)
 <use imgs/config_kernel2.png>
 Package pdftex.def Info: imgs/config_kernel2.png  used on input line 398.
 (pdftex.def)             Requested size: 209.04013pt x 167.64314pt.
-<imgs/conf_kernel3.png, id=315, 391.4625pt x 170.13562pt>
+<imgs/conf_kernel3.png, id=351, 391.4625pt x 170.13562pt>
 File: imgs/conf_kernel3.png Graphic file (type png)
 <use imgs/conf_kernel3.png>
 Package pdftex.def Info: imgs/conf_kernel3.png  used on input line 407.
 (pdftex.def)             Requested size: 156.58221pt x 68.05302pt.
-<imgs/conf_kernel.png, id=316, 368.87813pt x 421.575pt>
+<imgs/conf_kernel.png, id=352, 368.87813pt x 421.575pt>
 File: imgs/conf_kernel.png Graphic file (type png)
 <use imgs/conf_kernel.png>
 Package pdftex.def Info: imgs/conf_kernel.png  used on input line 416.
 (pdftex.def)             Requested size: 143.86188pt x 164.41357pt.
- [12 <./imgs/config_kernel2.png> <./imgs/conf_kernel3.png> <./imgs/conf_kernel.
+ [13 <./imgs/config_kernel2.png> <./imgs/conf_kernel3.png> <./imgs/conf_kernel.
 png>]
-[13] [14] [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 517.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 517.
+[14] [15] [16] [17]
+<imgs/proxy_config.PNG, id=464, 418.56375pt x 53.44969pt>
+File: imgs/proxy_config.PNG Graphic file (type png)
+<use imgs/proxy_config.PNG>
+Package pdftex.def Info: imgs/proxy_config.PNG  used on input line 621.
+(pdftex.def)             Requested size: 343.22449pt x 43.82901pt.
+ [18 <./imgs/proxy_config.PNG>] [19]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 646.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 646.
  (articulo.aux
 LaTeX Info: Redefining \. on input line 25.
 LaTeX Info: Redefining \% on input line 25.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 517.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 517.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 646.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 646.
 Package rerunfilecheck Info: File `articulo.out' has not changed.
-(rerunfilecheck)             Checksum: 5D5B51A68551D1E62FE58508BDFCFB33;1062.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 517.
+(rerunfilecheck)             Checksum: 4FB394C4E24AA94438A82C8C1EB0261C;1475.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 646.
  ) 
 Here is how much of TeX's memory you used:
- 22651 strings out of 481199
- 447407 string characters out of 2905595
- 1145929 words of memory out of 3000000
- 37588 multiletter control sequences out of 15000+200000
+ 22901 strings out of 481199
+ 450482 string characters out of 2905595
+ 1146056 words of memory out of 3000000
+ 37770 multiletter control sequences out of 15000+200000
  542750 words of font info for 55 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,8n,87p,937b,1875s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -878,9 +883,9 @@ amsfonts/cm/cmti12.pfb><C:/Users/nemos/AppData/Local/Programs/MiKTeX/fonts/type
 1/urw/courier/ucrb8a.pfb><C:/Users/nemos/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/urw/courier/ucrr8a.pfb><C:/Users/nemos/AppData/Local/Programs/MiKTeX/fonts/
 type1/urw/courier/ucrro8a.pfb>
-Output written on articulo.pdf (15 pages, 235368 bytes).
+Output written on articulo.pdf (19 pages, 261171 bytes).
 PDF statistics:
- 450 PDF objects out of 1000 (max. 8388607)
- 245 named destinations out of 1000 (max. 500000)
- 147 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 571 PDF objects out of 1000 (max. 8388607)
+ 311 named destinations out of 1000 (max. 500000)
+ 200 words of extra memory for PDF output out of 10000 (max. 10000000)
 
