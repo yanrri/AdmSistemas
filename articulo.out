@@ -17,3 +17,6 @@
 \BOOKMARK [3][-]{subsubsection.3.2.1}{Configuraci\363n SSH}{subsection.3.2}% 17
 \BOOKMARK [3][-]{subsubsection.3.2.2}{Conexi\363n por t\372nel}{subsection.3.2}% 18
 \BOOKMARK [3][-]{subsubsection.3.2.3}{ SSHFS: Montar archivos remotos}{subsection.3.2}% 19
+\BOOKMARK [1][-]{section.4}{Transferencia de Datos}{}% 20
+\BOOKMARK [2][-]{subsection.4.1}{TFTP}{section.4}% 21
+\BOOKMARK [2][-]{subsection.4.2}{FTP}{section.4}% 22

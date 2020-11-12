@@ -637,10 +637,111 @@ sshfs alumno@10.1.1.36:RemoteFolder/ ~/Documents/ -o ssh_command='ssh -J nirojas
 
 En este caso se agregó la opción \emph{ssh\_command} para lograr la conexión mediante un túnel.
 
+\section{Transferencia de Datos}
+
+\subsection{TFTP}
+
+Corresponde a un protocolo de transferencia de archivos más sencillo y rápido que el clásico FTP ya que realiza un menor número de validaciones y no cuentar con un sistema de cifrado o autenticado. Trabaja sobre el puerto 69 en UDP.\cite{tftp}
+
+Primero será necesario instalar un software que trabaje con este protocolo por el lado del servidor, en este caso se escogió \emph{tftpd-hpa}
+
+\begin{lstlisting}[frame=single]
+$ sudo apt install tftpd-hpa
+\end{lstlisting}
+
+Una vez instalado se ejecuta el servicio.
+\begin{lstlisting}[frame=single]
+$ sudo systemctl start tftpd-hpa
+\end{lstlisting}
+
+Para comprobar el puerto en el que se esta ejecutando se puede ejecutar el comando netstat
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.69]{imgs/netstat1.png}
+   \caption{Puertos de red TCP/UDP en uso}
+   \label{fig7}
+\end{figure}
+Se puede ver que en la última línea el programa tftpd esta usando el puerto UDP 69
+
+Una vez arriba el servidor es necesario instalar un software por el lado del cliente para subir o bajar archivos del servidor. En este caso se instalará  \emph{tftp} .
+
+\begin{lstlisting}[frame=single]
+$ sudo apt install tftp
+\end{lstlisting}
+
+Para conectarnos al servidor simplemente se debe indicar la dirección IP del servidor tftp
+\begin{lstlisting}[frame=single]
+$ tftp 10.1.1.35
+tftp>
+\end{lstlisting}
+
+Se abre una consola en donde se puede digitar el símbolo ? para ver los comandos disponibles.
+\begin{lstlisting}[frame=single]
+tftp>?
+Commands may be abbreviated.  Commands are:
+
+connect         connect to remote tftp
+mode            set file transfer mode
+put             send file
+get             receive file
+quit            exit tftp
+verbose         toggle verbose mode
+trace           toggle packet tracing
+status          show current status
+binary          set mode to octet
+ascii           set mode to netascii
+rexmt           set per-packet retransmission timeout
+timeout         set total retransmission timeout
+?               print help information
+
+\end{lstlisting}
+Para enviar un archivo al servidor
+\begin{lstlisting}[frame=single]
+tftp> put top_secret.txt
+Received 15 bytes in 0.0 seconds
+tftp>
+\end{lstlisting}
+
+Para obtener un archivo que se encuentre en el servidor
+\begin{lstlisting}[frame=single]
+tftp> get top_secret.txt
+Received 15 bytes in 0.0 seconds
+tftp>
+\end{lstlisting}
+
+\subsection{FTP}
+
+Es el protocolo estándar para la transferencia de archivos. Usa normalmente el puerto 20 y 21 en TCP.
+
+Al igual que con TFTP existen diferentes softwares que implementan este protocolo del lado del servidor y del cliente. Incluso algunas opciones con interfaz gráfica como FileZilla y gFTP. 
+
+En este caso para el servidor se instalará el programa \emph{proftpd}
+
+\begin{lstlisting}[frame=single]
+$ sudo apt install proftpd-basic
+\end{lstlisting}
+
+Una vez instalado se puede levantar el servicio
+\begin{lstlisting}[frame=single]
+$ sudo systemd start proftpd.service
+\end{lstlisting}
+
+En la Figura \ref{fig7} se puede ver también que el servicio proftpd esta trabajando en el puerto 21 en TCP. 
+
+Con el servidor funcionando podemos instalar el programa \emph{ftp} del lado del cliente.
+
+\begin{lstlisting}[frame=single]
+$ sudo apt install ftp
+\end{lstlisting}
+
+
+
 %--------------%
 \newpage
 \begin{thebibliography}{99}
 \bibitem{mlinux} Manual Linux \url{https://manualinux.eu/gcc.html}
 \bibitem{ssh} SSH \url{https://es.wikipedia.org/wiki/Secure_Shell}
+\bibitem{tftp} TFTP \url{https://es.wikipedia.org/wiki/TFTP}
 \end{thebibliography}
 \end{document}
