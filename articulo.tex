@@ -735,6 +735,167 @@ Con el servidor funcionando podemos instalar el programa \emph{ftp} del lado del
 $ sudo apt install ftp
 \end{lstlisting}
 
+Para conectarse simplemente se debe indicar la dirección IP del servidor.
+\begin{lstlisting}[frame=single]
+ftp 10.1.1.35
+Connected to 10.1.1.35.
+220 ProFTPD Server (Debian) [::1]
+Name (10.1.1.35:alumno): nico
+331 Password required for alumno
+Password:
+230 User nico logged in
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp>
+\end{lstlisting}
+
+En este caso pide una autenticación a través de un usuario y contraseña. Se puede configurar el servidor para permitir conexiones anónimas. Para esto es necesario configurar el archivo de configuración ubicado en \emph{/etc/proftpd/proftpd.conf}
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.39]{imgs/ftp_conf.PNG}
+   \caption{Configuración de proftpd para usuarios anónimos}
+   \label{fig8}
+\end{figure}
+Estas líneas estarán comentadas por defecto en el archivo de configuración, al modificar esto será necesario reiniciar el servicio para aplicar los cambios.
+
+\begin{lstlisting}[frame=single]
+$ sudo systemctl restart proftpd.service
+\end{lstlisting}
+
+Al conectarse simplemente debe especificarse el usuario ftp y omitir la contraseña.
+\begin{lstlisting}[frame=single]
+$ ftp 10.1.1.35
+Connected to 10.1.1.35.
+220 ProFTPD Server (Debian) [::ffff:10.1.1.36]
+Name (10.1.1.36:alumno): ftp
+331 Anonymous login ok, send your complete email address as your password
+Password:
+230-Welcome, archive user ftp@stgo-10.1.1.35.in.utalca.cl !
+230-
+230-The local time is: Mon Nov 16 00:22:33 2020
+230-
+230-This is an experimental FTP server.  If you have any unusual problems,
+230-please report them via e-mail to <root@admSist6>.
+230-
+230 Anonymous access granted, restrictions apply
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> 
+\end{lstlisting}
+
+En este caso ftp tiene más opciones que tftp como por ejemplo navegar entre directorios o listar los archivos. Para ver todos los comandos disponibles se puede ver de la misma forma que tftp.
+
+\begin{lstlisting}[frame=single]
+>ftp ?
+Commands may be abbreviated.  Commands are:
+
+!               dir             mdelete         qc              site
+$               disconnect      mdir            sendport        size
+account         exit            mget            put             status
+append          form            mkdir           pwd             struct
+ascii           get             mls             quit            system
+bell            glob            mode            quote           sunique
+binary          hash            modtime         recv            tenex
+bye             help            mput            reget           tick
+case            idle            newer           rstatus         trace
+cd              image           nmap            rhelp           type
+cdup            ipany           nlist           rename          user
+chmod           ipv4            ntrans          reset           umask
+close           ipv6            open            restart         verbose
+cr              lcd             prompt          rmdir           ?
+delete          ls              passive         runique
+debug           macdef          proxy           send
+\end{lstlisting}
+\break
+Ejemplo para descargar un archivo del servidor
+\begin{lstlisting}[frame=single]
+>ftp get welcome.msg
+local: welcome.msg remote: welcome.msg
+200 PORT command successful
+150 Opening BINARY mode data connection for welcome.msg (170 bytes)
+226 Transfer complete
+170 bytes received in 0.00 secs (3.3776 MB/s)
+ftp>
+\end{lstlisting}
+
+
+\subsubsection{SSL/TLS: Cifrar el trafico de FTP}
+
+Otra de las grandes diferencias que tiene FTP con respecto a TFTP es que permite configurar conexiones seguras a través de un certificado  SSL (capa de sockets seguros). Esto permite que la información que se transmite esta cifrada por lo que cualquier persona que intente interceptar el tráfico no podrá acceder ni modificar los archivos. TSL corresponde a una versión actualizada de SSL con mayor seguridad. 
+
+Lo primero es incluir el archivo de configuración para TSL descomentando la siguiente linea.
+\begin{lstlisting}[frame=single]
+Include /etc/proftpd/tls.conf
+\end{lstlisting}
+
+Si es necesario se debe crear el archivo tsl.conf en el directorio \emph{/etc/proftpd/}. Dentro debe estar lo siguiente:
+\begin{lstlisting}[frame=single]
+# vim tsl.conf
+<IfModule mod_tls.c>
+     TLSEngine on
+     TLSLog /var/log/proftpd/tls.log
+     TLSProtocol SSLv23
+     TLSRSACertificateFile /etc/ssl/certs/proftpd.crt
+     TLSRSACertificateKeyFile /etc/ssl/private/proftpd.key
+     TLSRequired on
+</IfModule>
+\end{lstlisting}
+\break
+\break
+\break
+\break
+Ahora hace falta generar los certificados público y privado.
+\begin{lstlisting}[frame=single]
+# proftpd-gencert
+Generating a RSA private key
+........+++++
+.......+++++
+writing new private key to '/etc/ssl/private/proftpd.key'
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:CL
+State or Province Name (full name) [Some-State]:Maule
+Locality Name (eg, city) []:Curico
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Utalca
+Organizational Unit Name (eg, section) []:Bioinformatica
+Common Name (e.g. server FQDN or YOUR name) []:Nicolas
+Email Address []:nicrojas16@alumnos.utalca.cl
+
+Use the following information in your ProFTPD configuration:
+
+TLSRSACertificateFile    /etc/ssl/certs/proftpd.crt
+TLSRSACertificateKeyFile /etc/ssl/private/proftpd.key
+
+See /etc/proftpd/tls.conf for suggested TLS related configuration
+items and include that file in your /etc/proftpd/proftpd.conf file.
+\end{lstlisting}
+
+Por útlimo se reinicia el servicio de proftpd.
+\begin{lstlisting}[frame=single]
+# systemctl restart proftpd.service
+\end{lstlisting}
+
+Para probar la conexión es necesario un cliente con soporte para conexiones seguras como lo es lftp.
+
+Para instalar lftp
+\begin{lstlisting}[frame=single]
+$ sudo apt install lftp
+\end{lstlisting}
+
+Para conectarnos al servidor 
+\begin{lstlisting}[frame=single]
+$ lftp sftp://alumno@10.1.1.35
+Password:
+lftp alumno@10.1.1.35:~> get hola.txt
+13 bytes transferred
+\end{lstlisting}
 
 
 %--------------%
