@@ -20,4 +20,6 @@
 \BOOKMARK [1][-]{section.4}{Transferencia de Datos}{}% 20
 \BOOKMARK [2][-]{subsection.4.1}{TFTP}{section.4}% 21
 \BOOKMARK [2][-]{subsection.4.2}{FTP}{section.4}% 22
-\BOOKMARK [3][-]{subsubsection.4.2.1}{SSL/TLS: Cifrar el trafico de FTP}{subsection.4.2}% 23
+\BOOKMARK [3][-]{subsubsection.4.2.1}{SSL/TLS: Cifrar el tr\341fico de FTP}{subsection.4.2}% 23
+\BOOKMARK [1][-]{section.5}{Resoluci\363n de Nombres - DNS}{}% 24
+\BOOKMARK [1][-]{section.6}{Sistema de Archivos por Red: NFS}{}% 25

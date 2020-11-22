@@ -641,7 +641,7 @@ En este caso se agregó la opción \emph{ssh\_command} para lograr la conexión 
 
 \subsection{TFTP}
 
-Corresponde a un protocolo de transferencia de archivos más sencillo y rápido que el clásico FTP ya que realiza un menor número de validaciones y no cuentar con un sistema de cifrado o autenticado. Trabaja sobre el puerto 69 en UDP.\cite{tftp}
+Corresponde a un protocolo de transferencia de archivos más sencillo y rápido que el clásico FTP ya que realiza un menor número de validaciones y no cuenta con un sistema de cifrado o autenticado. Trabaja sobre el puerto 69 en UDP.\cite{tftp}
 
 Primero será necesario instalar un software que trabaje con este protocolo por el lado del servidor, en este caso se escogió \emph{tftpd-hpa}
 
@@ -820,7 +820,7 @@ ftp>
 \end{lstlisting}
 
 
-\subsubsection{SSL/TLS: Cifrar el trafico de FTP}
+\subsubsection{SSL/TLS: Cifrar el tráfico de FTP}
 
 Otra de las grandes diferencias que tiene FTP con respecto a TFTP es que permite configurar conexiones seguras a través de un certificado  SSL (capa de sockets seguros). Esto permite que la información que se transmite esta cifrada por lo que cualquier persona que intente interceptar el tráfico no podrá acceder ni modificar los archivos. TSL corresponde a una versión actualizada de SSL con mayor seguridad. 
 
@@ -877,7 +877,7 @@ See /etc/proftpd/tls.conf for suggested TLS related configuration
 items and include that file in your /etc/proftpd/proftpd.conf file.
 \end{lstlisting}
 
-Por útlimo se reinicia el servicio de proftpd.
+Por último se reinicia el servicio de proftpd.
 \begin{lstlisting}[frame=single]
 # systemctl restart proftpd.service
 \end{lstlisting}
@@ -897,7 +897,111 @@ lftp alumno@10.1.1.35:~> get hola.txt
 13 bytes transferred
 \end{lstlisting}
 
+\section{Resolución de Nombres - DNS}
 
+Con el crecimiento exponencial de las redes en internet han surgido algunos problemas para ubicar y memorizar las direcciones IP de cada uno de los servicios que vistamos en la web. Para ello la solución fue asignar nombres a cada uno de los servicios web para que sea mucho más fácil de recordar y promocionar que una dirección IP, con ello nacen nombres de dominio como google.com, facebook.com, twitter.com, etc. Estos nombres son traducidos a la dirección IP correspondiente mediante un software alojado en un servidor. Por lo tanto cuando nos conectamos a google.com por ejemplo, lo primero que se realiza es mandar la solicitud al servidor DNS para que traduzca este nombre, este nos devuelve la dirección IP del sitio web y a través de esta nos conectamos.  
+
+El software que se utiliza para hacer esta traducción es \emph{bind9}. A continuación se muestra su instalación junto con herramientas para comprobar su funcionamiento.
+
+\begin{lstlisting}[frame=single]
+$ sudo apt install bind9 dnsutils dnstracer 
+\end{lstlisting}
+
+Una vez instalado se debe configurar y crear los archivos en la carpeta \emph{/etc/bind/} para añadir un nuevo dominio y subdominios.
+
+Para añadir se puede copiar el archivo db.local a otro con el nombre del dominio que vamos a crear por ejemplo db.nicrojas.cl
+
+\begin{lstlisting}[frame=single]
+# cd /etc/bind/ 
+# cp db.local db.nicrojas.cl
+# vim db.nicrojas.cl
+\end{lstlisting}
+
+Ahora se debe editar el archivo y se debe cambiar el nombre localhost por el nombre de dominio y subdominio a crear. En la parte final del archivo se debe especificar la IP a la que hace referencia estos nombres, primero el dominio y luego los subdominios como se muestra en la Figura \ref{fig9}.
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.65]{imgs/dns_1.PNG}
+   \caption{Configuración de archivo db.nicrojas.cl}
+   \label{fig9}
+\end{figure}
+
+En este caso se configuró que el subdominio este alojado a la misma máquina que el dominio principal pero eventualmente podríamos tener cada subdominio en alguna máquina dedicada para este.
+
+El siguiente archivo a crear es el de named.conf.nicrojas.cl el cual indica la zona con nuestro nombre de dominio e icluye la ruta del archivo db.nicrojas.cl
+
+La estructura de este nuevo archivo es de la siguiente forma:
+\begin{lstlisting}[frame=single]
+# vim named.conf.nicrojas.cl
+zone "nicrojas.cl" {
+        type master;
+        file "/etc/bind/db.nicrojas.cl";
+};
+\end{lstlisting}
+
+Por último en el archivo named.conf se encuentran todas las zonas de nuestro servidor DNS, por lo que hay agregar la siguiente línea para agregar el dominio creado.
+
+\begin{lstlisting}[frame=single]
+# echo "include \"/etc/bind/named.conf.nicrojas.cl\";" >> /etc/bind/named.conf
+\end{lstlisting}
+
+Una vez realizado esto se debe reiniciar el servicio para actualizar las configuraciones.
+\begin{lstlisting}[frame=single]
+# systemctl restart bind9
+\end{lstlisting}
+
+Para comprobar el funcionamiento del dominio podemos conectarnos a la máquina de Jessica(10.1.1.35) y probar el nombre de dominio y subdominio creado.
+
+\begin{lstlisting}[frame=single]
+$ ssh nico@10.1.1.35
+\end{lstlisting}
+
+Dentro de esta máquina debemos indicar la dirección IP del servidor DNS a utilizar, para ello se debe modificar el archivo \emph{/etc/resolv.conf} y agregar la siguiente línea.
+
+\begin{lstlisting}[frame=single]
+# vim /etc/resolv.conf
+nameserver 10.1.1.36 
+\end{lstlisting}
+
+La línea debe agregarse arriba del resto de nameserver, para que funcione correctamente.
+
+Por último probamos su funcionamiento con la funcionalidad nslookup obteniendo lo siguiente.
+\begin{lstlisting}[frame=single]
+$ nslookup nicrojas.cl
+Server:         10.1.1.36
+Address:        10.1.1.36#53
+
+Name:   nicrojas.cl
+Address: 10.1.1.36
+\end{lstlisting}
+
+Se prueba también el subdominio.
+ \begin{lstlisting}[frame=single]
+$ nslookup yanrri.nicrojas.cl
+Server:         10.1.1.36
+Address:        10.1.1.36#53
+
+Name:   yanrri.nicrojas.cl
+Address: 10.1.1.36
+\end{lstlisting}
+
+Como se puede observar la consulta de nombre la hace al servidor DNS alojado en nuestra máquina remota (10.1.1.36), usando el puerto 53 que es el predeterminado para este servicio. Por último entrega la dirección a la que hace referencia el dominio/subdominio que en este caso corresponde a la misma del servidor DNS.
+
+Otra prueba interesante es poder hacer ping usando el nombre de dominio/subdominio.
+ \begin{lstlisting}[frame=single]
+$ ping yanrri.nicrojas.cl -c 4
+PING yanrri.nicrojas.cl (10.1.1.36) 56(84) bytes of data.
+64 bytes from 10.1.1.36 (10.1.1.36): icmp_seq=1 ttl=64 time=0.106 ms
+64 bytes from 10.1.1.36 (10.1.1.36): icmp_seq=2 ttl=64 time=0.193 ms
+64 bytes from 10.1.1.36 (10.1.1.36): icmp_seq=3 ttl=64 time=0.192 ms
+64 bytes from 10.1.1.36 (10.1.1.36): icmp_seq=4 ttl=64 time=0.195 ms
+
+--- yanrri.nicrojas.cl ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 54ms
+rtt min/avg/max/mdev = 0.106/0.171/0.195/0.040 ms
+\end{lstlisting}
+
+\section{Sistema de Archivos por Red: NFS}
 %--------------%
 \newpage
 \begin{thebibliography}{99}

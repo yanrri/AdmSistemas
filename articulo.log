@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.10.2)  17 NOV 2020 03:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.10.2)  21 NOV 2020 22:49
 entering extended mode
 **./articulo.tex
 (articulo.tex
@@ -751,7 +751,7 @@ LaTeX Info: Redefining \nameref on input line 27.
 
 ABD: EveryShipout initializing macros
 \c@lstlisting=\count297
-<imgs/logo.png, id=98, 202.7575pt x 250.9375pt>
+<imgs/logo.png, id=106, 202.7575pt x 250.9375pt>
 File: imgs/logo.png Graphic file (type png)
 <use imgs/logo.png>
 Package pdftex.def Info: imgs/logo.png  used on input line 32.
@@ -820,28 +820,28 @@ Overfull \hbox (318.25273pt too wide) in paragraph at lines 54--55
  []
 
 ) [9] [10]
-<imgs/makefile_kdtree.png, id=340, 316.93407pt x 255.20343pt>
+<imgs/makefile_kdtree.png, id=352, 316.93407pt x 255.20343pt>
 File: imgs/makefile_kdtree.png Graphic file (type png)
 <use imgs/makefile_kdtree.png>
 Package pdftex.def Info: imgs/makefile_kdtree.png  used on input line 319.
 (pdftex.def)             Requested size: 228.19235pt x 183.74632pt.
-<imgs/kdtree.png, id=341, 411.03563pt x 91.84312pt>
+<imgs/kdtree.png, id=353, 411.03563pt x 91.84312pt>
 File: imgs/kdtree.png Graphic file (type png)
 <use imgs/kdtree.png>
 Package pdftex.def Info: imgs/kdtree.png  used on input line 337.
 (pdftex.def)             Requested size: 295.94542pt x 66.12698pt.
  [11 <./imgs/makefile_kdtree.png> <./imgs/kdtree.png>] [12]
-<imgs/config_kernel2.png, id=374, 536.0025pt x 429.85594pt>
+<imgs/config_kernel2.png, id=386, 536.0025pt x 429.85594pt>
 File: imgs/config_kernel2.png Graphic file (type png)
 <use imgs/config_kernel2.png>
 Package pdftex.def Info: imgs/config_kernel2.png  used on input line 398.
 (pdftex.def)             Requested size: 209.04013pt x 167.64314pt.
-<imgs/conf_kernel3.png, id=375, 391.4625pt x 170.13562pt>
+<imgs/conf_kernel3.png, id=387, 391.4625pt x 170.13562pt>
 File: imgs/conf_kernel3.png Graphic file (type png)
 <use imgs/conf_kernel3.png>
 Package pdftex.def Info: imgs/conf_kernel3.png  used on input line 407.
 (pdftex.def)             Requested size: 156.58221pt x 68.05302pt.
-<imgs/conf_kernel.png, id=376, 368.87813pt x 421.575pt>
+<imgs/conf_kernel.png, id=388, 368.87813pt x 421.575pt>
 File: imgs/conf_kernel.png Graphic file (type png)
 <use imgs/conf_kernel.png>
 Package pdftex.def Info: imgs/conf_kernel.png  used on input line 416.
@@ -849,42 +849,50 @@ Package pdftex.def Info: imgs/conf_kernel.png  used on input line 416.
  [13 <./imgs/config_kernel2.png> <./imgs/conf_kernel3.png> <./imgs/conf_kernel.
 png>]
 [14] [15] [16] [17]
-<imgs/proxy_config.PNG, id=488, 418.56375pt x 53.44969pt>
+<imgs/proxy_config.PNG, id=500, 418.56375pt x 53.44969pt>
 File: imgs/proxy_config.PNG Graphic file (type png)
 <use imgs/proxy_config.PNG>
 Package pdftex.def Info: imgs/proxy_config.PNG  used on input line 621.
 (pdftex.def)             Requested size: 343.22449pt x 43.82901pt.
  [18 <./imgs/proxy_config.PNG>]
-<imgs/netstat1.png, id=501, 624.83438pt x 152.82094pt>
+<imgs/netstat1.png, id=513, 624.83438pt x 152.82094pt>
 File: imgs/netstat1.png Graphic file (type png)
 <use imgs/netstat1.png>
 Package pdftex.def Info: imgs/netstat1.png  used on input line 661.
 (pdftex.def)             Requested size: 431.13618pt x 105.44653pt.
  [19 <./imgs/netstat1.png>]
 [20]
-<imgs/ftp_conf.PNG, id=550, 465.23813pt x 461.47406pt>
+<imgs/ftp_conf.PNG, id=562, 465.23813pt x 461.47406pt>
 File: imgs/ftp_conf.PNG Graphic file (type png)
 <use imgs/ftp_conf.PNG>
 Package pdftex.def Info: imgs/ftp_conf.PNG  used on input line 756.
 (pdftex.def)             Requested size: 181.44214pt x 179.97415pt.
- [21 <./imgs/ftp_conf.PNG>] [22] [23] [24] [25]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 908.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 908.
+ [21 <./imgs/ftp_conf.PNG>] [22] [23] [24]
+<imgs/dns_1.PNG, id=694, 374.14781pt x 173.89969pt>
+File: imgs/dns_1.PNG Graphic file (type png)
+<use imgs/dns_1.PNG>
+Package pdftex.def Info: imgs/dns_1.PNG  used on input line 924.
+(pdftex.def)             Requested size: 243.19318pt x 113.03345pt.
+ [25 <./imgs/dns_1.PNG>] [26]
+[27] [28]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1012.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1012.
  (articulo.aux
 LaTeX Info: Redefining \. on input line 25.
 LaTeX Info: Redefining \% on input line 25.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 908.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 908.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1012.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1012.
+
 Package rerunfilecheck Info: File `articulo.out' has not changed.
-(rerunfilecheck)             Checksum: C1F534DAEF943FF1D06C0ED2CCE9831A;1733.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 908.
+(rerunfilecheck)             Checksum: 555A1D595196CBFF7B2994B325185FB0;1870.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1012.
  ) 
 Here is how much of TeX's memory you used:
- 23612 strings out of 481199
- 458811 string characters out of 2905595
- 1146211 words of memory out of 3000000
- 38317 multiletter control sequences out of 15000+200000
+ 23733 strings out of 481199
+ 460287 string characters out of 2905595
+ 1146276 words of memory out of 3000000
+ 38385 multiletter control sequences out of 15000+200000
  542750 words of font info for 55 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,8n,87p,937b,1875s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -896,9 +904,9 @@ amsfonts/cm/cmti12.pfb><C:/Users/nemos/AppData/Local/Programs/MiKTeX/fonts/type
 1/urw/courier/ucrb8a.pfb><C:/Users/nemos/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/urw/courier/ucrr8a.pfb><C:/Users/nemos/AppData/Local/Programs/MiKTeX/fonts/
 type1/urw/courier/ucrro8a.pfb>
-Output written on articulo.pdf (25 pages, 334255 bytes).
+Output written on articulo.pdf (28 pages, 357050 bytes).
 PDF statistics:
- 810 PDF objects out of 1000 (max. 8388607)
- 473 named destinations out of 1000 (max. 500000)
- 242 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 893 PDF objects out of 1000 (max. 8388607)
+ 525 named destinations out of 1000 (max. 500000)
+ 263 words of extra memory for PDF output out of 10000 (max. 10000000)
 
