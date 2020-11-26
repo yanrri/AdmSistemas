@@ -1002,11 +1002,110 @@ rtt min/avg/max/mdev = 0.106/0.171/0.195/0.040 ms
 \end{lstlisting}
 
 \section{Sistema de Archivos por Red: NFS}
+
+NFS es otro protocolo, mediante el cual se pueden compartir archivos de forma distribuida, rápida y sencilla mediante el uso de la red. Sin embargo, no es un protocolo con cifrado ya que busca la mayor rapidez posible en el acceso a los archivos. Debido a esto suele implementarse en entornos de red privados para evitar problemas de seguridad. \cite{nfs}
+
+
+Primero se debe configurar el servidor principal que alojará la carpeta compartida en la red. Para ello es necesario instalar \emph{nfs-kernel-server}
+
+\begin{lstlisting}[frame=single]
+$ sudo apt install nfs-kernel-server
+\end{lstlisting}
+
+Luego como root se puede crear una carpeta la que será configurada para ser compartida en la red.
+\begin{lstlisting}[frame=single]
+# mkdir /NFS_Folder
+\end{lstlisting}
+
+Luego en el archivo \emph{/etc/exports} se debe agregar la carpeta creada junto con las dirección IP que tendrá acceso a esta con los permisos. 
+\begin{lstlisting}[frame=single]
+# vim /etc/exports
+/NFS_Folder		10.1.1.0/24(rw,sync,no_subtree_check)
+\end{lstlisting}
+En este caso se ha configurado para que se pueda compartir con toda la red privada especificando una máscara de subred de /24 bits.
+
+Solo queda reiniciar el servicio para guardar las configuraciones.
+\begin{lstlisting}[frame=single]
+# systemctl restart nfs-kernel-server.service
+\end{lstlisting}
+
+Ahora por parte del cliente es necesario instalar \emph{nfs-common} para montar la carpeta compartida en red.
+\begin{lstlisting}[frame=single]
+$ sudo apt install nfs-common
+\end{lstlisting}
+
+Se crea una carpeta en donde se montará la carpeta compartida
+\begin{lstlisting}[frame=single]
+$ mkdir shared/
+\end{lstlisting}
+
+Como root se monta la carpeta compartida creada en el servidor, sobre la carpeta creada en el cliente. 
+\begin{lstlisting}[frame=single]
+# mount -t nfs4 10.1.1.35:/shared_Nico /home/alumno/shared/
+\end{lstlisting}
+
+Para esto se usó como servidor la máquina de Jessica(10.1.1.35) en dónde se creo la carpeta compartida \emph{shared\_Nico} la cual contiene un archivo para probar su funcionamiento. Una vez montado en el cliente(10.1.1.36) se ven los archivos en ambos lados.
+\bigskip
+\begin{lstlisting}[frame=single]
+root@admSist5:/shared_Nico# ls
+soy_un_archivo.txt
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+alumno@admSist6:~/shared$ ls
+soy_un_archivo.txt
+\end{lstlisting}
+
+\subsection{Montar automáticamente}
+
+Pareciera estar listo una vez que se realiza el montaje, sin embargo al apagar o reiniciar la máquina es necesario volver a montar la carpeta compartida en la red. Esto se puede cambiar configurando el automontaje.
+
+
+Por ejemplo al reiniciar y luego listar los archivos de la carpeta en dónde se había realizado anteriormente el montaje, se puede ver que esta se encuentra vacía.
+\begin{lstlisting}[frame=single]
+# shutdown -r now
+$ cd ~/shared
+$ ls -ll
+total 0
+\end{lstlisting}
+
+Para montar de forma automática es necesario editar como root el archivo \emph{/etc/fstab} .
+\begin{lstlisting}[frame=single]
+# vim /etc/fstab
+\end{lstlisting}
+
+Dentro del archivo se agrega la información del montaje primero la IP del servidor con la ruta de la carpeta y luego la carpeta local en dónde se hará el montaje. Luego una serie de parámetros como se ve en la siguiente figura. 
+
+\begin{figure}[!h]
+   \centering
+   \includegraphics[scale=.85]{imgs/nfs_auto.PNG}
+   \caption{Configuración de archivo /etc/fstab}
+   \label{fig10}
+\end{figure}
+
+El parámetro que permite el montaje automático es el de \emph{auto}. Con esto guardamos el contenido del archivo y podemos comprobar reiniciando nuevamente y debería estar montado con los archivos compartidos en red.
+
+\begin{lstlisting}[frame=single]
+# shutdown -r now
+$ cd ~/shared
+$ ls -ll
+total 4
+-rw-r--r-- 1 root root 49 Nov 22 05:14 soy_un_archivo.txt
+\end{lstlisting}
+
+Para desmontar la unidad simplemente con el comando \emph{umount}.
+
+\begin{lstlisting}[frame=single]
+# umount /home/alumno/shared
+\end{lstlisting}
+
+ Sin embargo para que no se vuelva a montar cuando se reinicie la máquina será necesario modifacar el archivo \emph{/etc/fstab} en el parámetro \emph{auto} por \emph{noauto}
 %--------------%
 \newpage
 \begin{thebibliography}{99}
 \bibitem{mlinux} Manual Linux \url{https://manualinux.eu/gcc.html}
 \bibitem{ssh} SSH \url{https://es.wikipedia.org/wiki/Secure_Shell}
 \bibitem{tftp} TFTP \url{https://es.wikipedia.org/wiki/TFTP}
+\bibitem{nfs} NFS \url{https://www.extrahop.com/resources/protocols/nfs/}
 \end{thebibliography}
 \end{document}

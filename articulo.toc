@@ -24,3 +24,4 @@
 \contentsline {subsubsection}{\numberline {4.2.1}SSL/TLS: Cifrar el tráfico de FTP}{23}{subsubsection.4.2.1}%
 \contentsline {section}{\numberline {5}Resolución de Nombres - DNS}{25}{section.5}%
 \contentsline {section}{\numberline {6}Sistema de Archivos por Red: NFS}{27}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Montar automáticamente}{28}{subsection.6.1}%
