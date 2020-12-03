@@ -1056,9 +1056,35 @@ alumno@admSist6:~/shared$ ls
 soy_un_archivo.txt
 \end{lstlisting}
 
+\subsection{Cambiar permisos de la carpeta compartida}
+
+Con las configuraciones anterior solamente el servidor podrá editar/modificar los archivos, mientras que el cliente solo tendrá acceso de lectura, esto pese a que en la configuración de \emph{/etc/exports} tenga permisos para escribir también. Para revertir esto será necesario cambiar permisos también a la carpeta creada en el servidor y también se puede agregar a la configuración que los archivos queden con propietario de un usuario.
+
+Para asignar los permisos a la carpeta compartida
+\begin{lstlisting}[frame=single]
+# chmod 777 /shared_Nico/
+# chmod u+rwx /shared_Nico/
+\end{lstlisting}
+
+Cambiar propietario a la carpeta compartida y sus archivos 
+\begin{lstlisting}[frame=single]
+# chown alumno:alumno -R shared_Nico/
+\end{lstlisting}
+
+Asignar el propietario desde configuración NFS.
+\begin{lstlisting}[frame=single]
+# vim /etc/exports
+/home/alumno/shared_Nico 10.1.1.36(rw,sync,no_subtree_check,anonuid=1000,anongid=1000)
+\end{lstlisting}
+En este caso se agrega el uid del usuario que quedará como propietario de los archivos que se agreguen a la carpeta compartida.
+
+Para ver la información e id de los usuarios de la máquina.
+\begin{lstlisting}[frame=single]
+$ cat /etc/passwd
+\end{lstlisting}
 \subsection{Montar automáticamente}
 
-Pareciera estar listo una vez que se realiza el montaje, sin embargo al apagar o reiniciar la máquina es necesario volver a montar la carpeta compartida en la red. Esto se puede cambiar configurando el automontaje.
+Una vez todo configurado pareciera estar listo una vez que se realiza el montaje, sin embargo al apagar o reiniciar la máquina es necesario volver a montar la carpeta compartida en la red. Esto se puede cambiar configurando el automontaje.
 
 
 Por ejemplo al reiniciar y luego listar los archivos de la carpeta en dónde se había realizado anteriormente el montaje, se puede ver que esta se encuentra vacía.
@@ -1068,7 +1094,7 @@ $ cd ~/shared
 $ ls -ll
 total 0
 \end{lstlisting}
-
+\newpage
 Para montar de forma automática es necesario editar como root el archivo \emph{/etc/fstab} .
 \begin{lstlisting}[frame=single]
 # vim /etc/fstab
@@ -1099,7 +1125,7 @@ Para desmontar la unidad simplemente con el comando \emph{umount}.
 # umount /home/alumno/shared
 \end{lstlisting}
 
- Sin embargo para que no se vuelva a montar cuando se reinicie la máquina será necesario modifacar el archivo \emph{/etc/fstab} en el parámetro \emph{auto} por \emph{noauto}
+ Sin embargo para que no se vuelva a montar cuando se reinicie la máquina será necesario modificar el archivo \emph{/etc/fstab} en el parámetro \emph{auto} por \emph{noauto}.
 %--------------%
 \newpage
 \begin{thebibliography}{99}
