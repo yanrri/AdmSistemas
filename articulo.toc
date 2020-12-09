@@ -26,3 +26,4 @@
 \contentsline {section}{\numberline {6}Sistema de Archivos por Red: NFS}{27}{section.6}%
 \contentsline {subsection}{\numberline {6.1}Cambiar permisos de la carpeta compartida}{28}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}Montar automáticamente}{29}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Conclusión}{31}{section.7}%

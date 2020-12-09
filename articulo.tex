@@ -81,13 +81,22 @@ nicrojas16@alumnos.utalca.cl & Desarrollo de Software y\\
 \newpage
 \section{Introducción}
 
+El aumento del acceso a Internet en las últimas décadas ha significado un aumento exponencial en la cantidad de servidores encargados de alojar diferentes servicios como transferencia de archivos, servicios web, resolución de nombres de dominio, etc. Por otro lado el aumento en la capacidad de computo ha permitido tener disponible una mayor cantidad de supercomputadores para lo que se suele usar algún servicio de acceso remoto para correr diferentes tipos de cálculos, estos cluster de computadores suelen contar con acceder con un sistema de archivos compartidas en red para almacenar toda la información generada. 
 
+El objetivo de este proyecto:
+
+\begin{itemize}
+\item Comprender el proceso de compilación de programas y librerías, realizando diferentes pruebas y versiones del compilador.
+\item Configurar el acceso remoto usando diferentes protocolos como telnet y ssh.
+\item Evaluar los diferentes protocolos para la transferencia de archivos.
+\item Montar un sistema de archivos en la red, configurando el acceso y permisos.
+\end{itemize}    
 \newpage
 \section{Compilando programas, librerías, kernel}
 
 \subsection{Compilando el compilador GCC}
 
-El compilador es muy importante dentro de los sistemas informáticos, se encargan de traducir el código fuente de los programas a un lenguaje que pueda ejecutar la máquina. En sistemas Linux por lo general viene incluído el compilador GCC en una versión defecto. Para ver la versión por defecto se puede ejecutar el siguiente comando.
+El compilador es muy importante dentro de los sistemas informáticos, se encargan de traducir el código fuente de los programas a un lenguaje que pueda ejecutar la máquina. En sistemas Linux por lo general viene incluido el compilador GCC en una versión defecto. Para ver la versión por defecto se puede ejecutar el siguiente comando.
 
 \begin{lstlisting}[frame=single,framexrightmargin=15pt]
 $ gcc --version
@@ -433,7 +442,7 @@ CONFIG_DEBUG_INFO=n
 \end{lstlisting}
 
 \subsubsection{Screen y Compilación}
-Ahora quedaría compilar el kernel, para lo cual se hizó una prueba en dos máquinas , una alojada en un servidor remoto y otra localmente. 
+Ahora quedaría compilar el kernel, para lo cual se hizo una prueba en dos máquinas , una alojada en un servidor remoto y otra localmente. 
 
 \begin{itemize}
 \item La máquina remota cuenta con 2 CPUs con 2 hilos de AMD a 2.7 GHz y 2 GB RAM 
@@ -598,7 +607,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 \end{lstlisting}
   
-Luego es necesario crear el directiorio .ssh/ en el host remoto en caso de que no haya sido creado con anterioridad.
+Luego es necesario crear el directorio .ssh/ en el host remoto en caso de que no haya sido creado con anterioridad.
 
 \begin{lstlisting}[frame=single]
 $ ssh bioinfo mkdir -p .ssh
@@ -623,7 +632,7 @@ El host intermedio se puede agregar a la configuración ssh quedando como la sig
    \label{fig6}
 \end{figure}
 
-La imagen muestra en 'proxycommnad' el host que actua como túnel para establecer la conexión con el host remoto final. En este caso se usa el servidor bioinfo.utalca.cl para poder conectarse a la máquina con dirección IP 10.1.1.36 con el usuario alumno.
+La imagen muestra en 'proxycommnad' el host que actúa como túnel para establecer la conexión con el host remoto final. En este caso se usa el servidor bioinfo.utalca.cl para poder conectarse a la máquina con dirección IP 10.1.1.36 con el usuario alumno.
 
 Finalmente si se desea conectar a través de un túnel sin indicar contraseña por cada conexión, es necesario copiar la clave rsa tanto en el host intermedio como el host final.
 
@@ -1127,6 +1136,13 @@ Para desmontar la unidad simplemente con el comando \emph{umount}.
 
  Sin embargo para que no se vuelva a montar cuando se reinicie la máquina será necesario modificar el archivo \emph{/etc/fstab} en el parámetro \emph{auto} por \emph{noauto}.
 %--------------%
+\newpage
+\section{Conclusión}
+
+A modo de síntesis, se ha demostrado la importancia que tiene cada uno de los servicios y recursos que se pueden configurar en un sistema computacional. Muchos de estos servicios los usamos día a día en Internet.
+
+Además cabe destacar que el uso de un protocolo u otro dependerá de las necesidades específicas de cada implementación para obtener el mejor rendimiento o la mayor seguridad según corresponda.  Cada uno de los servicios permite configurar diferentes aspectos como acceso, permisos, seguridad, entre otros y siempre será necesario adaptarlo a los requerimientos.   
+
 \newpage
 \begin{thebibliography}{99}
 \bibitem{mlinux} Manual Linux \url{https://manualinux.eu/gcc.html}
